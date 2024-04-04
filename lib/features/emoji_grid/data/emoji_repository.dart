@@ -14,7 +14,8 @@ class EmojiRepository {
 
     final fileStream = Directory(dirPath).list();
     await for (final fse in fileStream) {
-      bool isFile = (await fse.stat()).type == FileSystemEntityType.file;
+      final stat = await fse.stat();
+      bool isFile = stat.type == FileSystemEntityType.file;
       bool isImage = FileUtil.isImage(fse.path);
 
       if (isFile && isImage) {
@@ -23,6 +24,8 @@ class EmojiRepository {
         emojis.add(emoji);
       }
     }
+    emojis.sort((a, b) =>
+        -a.file.statSync().modified.compareTo(b.file.statSync().modified));
     return emojis;
   }
 

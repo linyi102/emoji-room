@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:path/path.dart' as p;
 
 class Emoji {
-  File? file;
+  File file;
   String filePath;
   int size;
   String title;
@@ -11,8 +12,9 @@ class Emoji {
   bool ignore;
   DateTime cTime;
   DateTime mTime;
+
   Emoji({
-    this.file,
+    required this.file,
     required this.filePath,
     required this.size,
     required this.title,
@@ -21,6 +23,20 @@ class Emoji {
     required this.cTime,
     required this.mTime,
   });
+
+  factory Emoji.fromFile(File file) {
+    final now = DateTime.now();
+    return Emoji(
+      file: file,
+      filePath: p.basename(file.path),
+      size: file.statSync().size,
+      title: '',
+      usageCount: 0,
+      ignore: false,
+      cTime: now,
+      mTime: now,
+    );
+  }
 
   Emoji copyWith({
     File? file,
@@ -44,20 +60,6 @@ class Emoji {
     );
   }
 
-  factory Emoji.fromFile(File file) {
-    final now = DateTime.now();
-    return Emoji(
-      file: file,
-      filePath: p.basename(file.path),
-      size: file.statSync().size,
-      title: '',
-      usageCount: 0,
-      ignore: false,
-      cTime: now,
-      mTime: now,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'filePath': filePath,
@@ -72,6 +74,7 @@ class Emoji {
 
   factory Emoji.fromMap(Map<String, dynamic> map) {
     return Emoji(
+      file: File(''),
       filePath: map['filePath'] as String,
       size: map['size'] as int,
       title: map['title'] as String,
@@ -89,14 +92,15 @@ class Emoji {
 
   @override
   String toString() {
-    return 'Emoji(filePath: $filePath, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
+    return 'Emoji(file: $file, filePath: $filePath, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
   }
 
   @override
   bool operator ==(covariant Emoji other) {
     if (identical(this, other)) return true;
 
-    return other.filePath == filePath &&
+    return other.file == file &&
+        other.filePath == filePath &&
         other.size == size &&
         other.title == title &&
         other.usageCount == usageCount &&
@@ -107,7 +111,8 @@ class Emoji {
 
   @override
   int get hashCode {
-    return filePath.hashCode ^
+    return file.hashCode ^
+        filePath.hashCode ^
         size.hashCode ^
         title.hashCode ^
         usageCount.hashCode ^
