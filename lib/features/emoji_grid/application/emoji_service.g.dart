@@ -20,7 +20,7 @@ final emojiServiceProvider = AutoDisposeProvider<EmojiService>.internal(
 );
 
 typedef EmojiServiceRef = AutoDisposeProviderRef<EmojiService>;
-String _$emojisHash() => r'9123e1d5b43cdd515973502bfc33f699c06d91ae';
+String _$emojisHash() => r'870421611e6047ac8a9d7cd55e78a7250d3a24d2';
 
 /// See also [emojis].
 @ProviderFor(emojis)

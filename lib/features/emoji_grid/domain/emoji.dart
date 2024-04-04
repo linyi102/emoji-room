@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 
 class Emoji {
   File? file;
-  String fileName;
+  String filePath;
   int size;
   String title;
   int usageCount;
@@ -13,7 +13,7 @@ class Emoji {
   DateTime mTime;
   Emoji({
     this.file,
-    required this.fileName,
+    required this.filePath,
     required this.size,
     required this.title,
     required this.usageCount,
@@ -24,7 +24,7 @@ class Emoji {
 
   Emoji copyWith({
     File? file,
-    String? fileName,
+    String? filePath,
     int? size,
     String? title,
     int? usageCount,
@@ -34,7 +34,7 @@ class Emoji {
   }) {
     return Emoji(
       file: file ?? this.file,
-      fileName: fileName ?? this.fileName,
+      filePath: filePath ?? this.filePath,
       size: size ?? this.size,
       title: title ?? this.title,
       usageCount: usageCount ?? this.usageCount,
@@ -48,7 +48,7 @@ class Emoji {
     final now = DateTime.now();
     return Emoji(
       file: file,
-      fileName: p.basename(file.path),
+      filePath: p.basename(file.path),
       size: file.statSync().size,
       title: '',
       usageCount: 0,
@@ -60,7 +60,7 @@ class Emoji {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'fileName': fileName,
+      'filePath': filePath,
       'size': size,
       'title': title,
       'usageCount': usageCount,
@@ -72,7 +72,7 @@ class Emoji {
 
   factory Emoji.fromMap(Map<String, dynamic> map) {
     return Emoji(
-      fileName: map['fileName'] as String,
+      filePath: map['filePath'] as String,
       size: map['size'] as int,
       title: map['title'] as String,
       usageCount: map['usageCount'] as int,
@@ -89,14 +89,14 @@ class Emoji {
 
   @override
   String toString() {
-    return 'Emoji(fileName: $fileName, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
+    return 'Emoji(filePath: $filePath, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
   }
 
   @override
   bool operator ==(covariant Emoji other) {
     if (identical(this, other)) return true;
 
-    return other.fileName == fileName &&
+    return other.filePath == filePath &&
         other.size == size &&
         other.title == title &&
         other.usageCount == usageCount &&
@@ -107,7 +107,7 @@ class Emoji {
 
   @override
   int get hashCode {
-    return fileName.hashCode ^
+    return filePath.hashCode ^
         size.hashCode ^
         title.hashCode ^
         usageCount.hashCode ^

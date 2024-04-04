@@ -1,10 +1,24 @@
-import 'package:emoji_room/features/persentation/emoji/emoji_grid_view.dart';
+import 'package:emoji_room/features/home/views/home.dart';
+import 'package:emoji_room/providers/config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+void main() async {
+  Hive.init((await getApplicationDocumentsDirectory()).path);
+  final config = await loadConfig();
+
+  runApp(ProviderScope(overrides: [
+    configProvider.overrideWithValue(config),
+  ], child: const MyApp()));
+}
+
+Future<Config> loadConfig() async {
+  final config = Config();
+  await config.init();
+  return config;
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const EmojiGridViewPage(),
+      home: const HomePage(),
       scrollBehavior: MyCustomScrollBehavior(),
     );
   }
