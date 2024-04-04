@@ -24,7 +24,7 @@ class EmojiDetailView extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              if (currentEmoji.emoji.file != null) _buildImage(currentEmoji),
+              _buildImage(currentEmoji),
               const GapH(8),
               _buildTitle(currentEmoji, context),
               const GapH(2),
@@ -54,7 +54,7 @@ class EmojiDetailView extends ConsumerWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
           child: Image.file(
-            currentEmoji.emoji.file!,
+            currentEmoji.emoji.file,
             fit: BoxFit.fitHeight,
           ),
         ),

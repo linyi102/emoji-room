@@ -21,7 +21,6 @@ class EmojiGridView extends ConsumerWidget {
           itemCount: emojis.length,
           itemBuilder: (context, index) {
             final emoji = emojis[index];
-            if (emoji.file == null) return const SizedBox();
             return InkWell(
               borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
               onTap: () => showCommonModalBottomSheet(
@@ -31,7 +30,7 @@ class EmojiGridView extends ConsumerWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
-                  child: Image.file(emoji.file!, fit: BoxFit.cover),
+                  child: Image.file(emoji.file, fit: BoxFit.cover),
                 ),
               ),
             );

@@ -16,9 +16,7 @@ class CurrentEmoji extends _$CurrentEmoji {
   }
 
   Future<void> share() async {
-    if (state.file == null) return;
-
-    final filePath = state.file!.path;
+    final filePath = state.file.path;
     if (Platform.isAndroid) {
       // ignore: deprecated_member_use
       await Share.shareFiles([filePath]);
