@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:emoji_room/constants/app_theme.dart';
 import 'package:emoji_room/features/emoji_detail/providers/current_emoji.provider.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
@@ -100,7 +102,8 @@ class EmojiDetailView extends ConsumerWidget {
       child: SizedBox(
         height: 45,
         child: ElevatedButton(
-            onPressed: currentEmoji.share, child: const Text('分享')),
+            onPressed: currentEmoji.share,
+            child: Text(Platform.isAndroid ? '分享' : '复制')),
       ),
     );
   }
