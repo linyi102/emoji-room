@@ -12,6 +12,8 @@ class EmojiDetailView extends ConsumerWidget {
   const EmojiDetailView(this.emoji, {super.key});
   final Emoji emoji;
 
+  double get emojiSize => 150;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentEmoji = ref.watch(currentEmojiProvider(emoji).notifier);
@@ -46,8 +48,7 @@ class EmojiDetailView extends ConsumerWidget {
       alignment: Alignment.center,
       child: Container(
         margin: const EdgeInsets.only(top: 20),
-        height: 120,
-        width: 120,
+        height: emojiSize,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
           child: Image.file(
@@ -97,7 +98,7 @@ class EmojiDetailView extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: SizedBox(
-        height: 40,
+        height: 45,
         child: ElevatedButton(
             onPressed: currentEmoji.share, child: const Text('分享')),
       ),
