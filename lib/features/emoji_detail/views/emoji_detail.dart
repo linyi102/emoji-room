@@ -40,7 +40,7 @@ class EmojiDetailView extends ConsumerWidget {
             Align(
                 alignment: Alignment.center,
                 child: _buildUsageCount(currentEmoji, context)),
-            _buildShareBottomButton(currentEmoji),
+            _buildShareBottomButton(currentEmoji, context),
           ],
         ));
   }
@@ -96,13 +96,17 @@ class EmojiDetailView extends ConsumerWidget {
     );
   }
 
-  Padding _buildShareBottomButton(CurrentEmoji currentEmoji) {
+  Padding _buildShareBottomButton(
+      CurrentEmoji currentEmoji, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: SizedBox(
         height: 45,
         child: ElevatedButton(
-            onPressed: currentEmoji.share,
+            onPressed: () {
+              currentEmoji.share();
+              Navigator.pop(context);
+            },
             child: Text(Platform.isAndroid ? '分享' : '复制')),
       ),
     );
