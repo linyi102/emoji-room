@@ -20,7 +20,11 @@ class EmojiGridItem extends ConsumerWidget {
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
-          child: Image.file(emoji.file, fit: BoxFit.cover),
+          child: Image.file(
+            emoji.file,
+            fit: BoxFit.cover,
+            cacheHeight: 300,
+          ),
         ),
       ),
     );
