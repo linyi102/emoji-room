@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:emoji_room/constants/app_theme.dart';
 import 'package:emoji_room/features/emoji_detail/providers/current_emoji.provider.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_title_edit/views/emoji_title_edit_page.dart';
 import 'package:emoji_room/routing/router.dart';
 import 'package:emoji_room/utils/file.dart';
+import 'package:emoji_room/widgets/emoji_detail_image.dart';
 import 'package:emoji_room/widgets/gap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +26,7 @@ class EmojiDetailView extends ConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildImage(emoji),
+          EmojiDetailImage(emoji),
           const GapH(8),
           _buildTitle(emoji, context),
           const GapH(2),
@@ -42,23 +42,6 @@ class EmojiDetailView extends ConsumerWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Align _buildImage(Emoji emoji) {
-    return Align(
-      alignment: Alignment.center,
-      child: Container(
-        margin: const EdgeInsets.only(top: 20),
-        height: emojiSize,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
-          child: Image.file(
-            emoji.file,
-            fit: BoxFit.fitHeight,
-          ),
-        ),
       ),
     );
   }

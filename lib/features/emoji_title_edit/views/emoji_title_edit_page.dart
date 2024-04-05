@@ -1,5 +1,7 @@
 import 'package:emoji_room/features/emoji_detail/providers/current_emoji.provider.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
+import 'package:emoji_room/widgets/emoji_detail_image.dart';
+import 'package:emoji_room/widgets/gap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,7 +18,7 @@ class EmojiTitleEditPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('编辑', style: TextStyle(fontSize: 16)),
+        title: const Text('编辑', style: TextStyle(fontSize: 18)),
         actions: [
           TextButton(
               onPressed: () {
@@ -32,6 +34,8 @@ class EmojiTitleEditPage extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
         child: Column(
           children: [
+            EmojiDetailImage(emoji),
+            const GapH(30),
             TextField(
               controller: titleTc,
               autofocus: true,
