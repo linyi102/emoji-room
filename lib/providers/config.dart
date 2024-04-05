@@ -10,9 +10,13 @@ class Config {
     box = await Hive.openBox('config');
   }
 
-  static const emojiDirPath = 'emoji_dir_path';
-  String getEmojiDir() => box.get(emojiDirPath, defaultValue: '');
-  Future<void> setEmojiDir(String dirPath) => box.put(emojiDirPath, dirPath);
+  static const emojiDirPathKey = 'emoji_dir_path';
+  String getEmojiDir() => box.get(emojiDirPathKey, defaultValue: '');
+  Future<void> setEmojiDir(String dirPath) => box.put(emojiDirPathKey, dirPath);
+
+  static const isDarkKey = 'isDark';
+  bool getIsDark() => box.get(isDarkKey, defaultValue: false);
+  Future<void> setIsDark(bool isDark) => box.put(isDarkKey, isDark);
 }
 
 @Riverpod(keepAlive: true)

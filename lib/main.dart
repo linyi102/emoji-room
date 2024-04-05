@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:emoji_room/features/home/views/home.dart';
 import 'package:emoji_room/providers/config.dart';
+import 'package:emoji_room/providers/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,17 +24,21 @@ Future<Config> loadConfig() async {
   return config;
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final botToastBuilder = BotToastInit();
+    final brightness = ref.watch(themeBrightnessProvider);
 
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlueAccent),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.lightBlueAccent,
+          brightness: brightness,
+        ),
         useMaterial3: true,
       ),
       builder: (context, child) {
