@@ -1,3 +1,4 @@
+import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
 import 'package:emoji_room/features/emoji_tags/domain/emoji_tag.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tag_chip.dart';
@@ -10,6 +11,13 @@ class EmojiTagsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiTagList = ref.watch(emojiTagListProvider);
+    final searchHasFocus = ref
+        .watch(emojiSearchControllerProvider.select((value) => value.hasFocus));
+
+    if (!searchHasFocus) {
+      return const SizedBox();
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       alignment: Alignment.centerLeft,

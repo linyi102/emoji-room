@@ -3,25 +3,82 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'emoji_search.provider.g.dart';
 
-@Riverpod(keepAlive: true)
-class EmojiSearchKeyword extends _$EmojiSearchKeyword {
-  late final TextEditingController keywordTec;
+class EmojiSearchModel {
+  final String keyword;
+  final TextEditingController keywordTec;
+  final FocusNode focusNode;
+  final bool hasFocus;
+  EmojiSearchModel({
+    this.keyword = '',
+    required this.keywordTec,
+    required this.focusNode,
+    this.hasFocus = false,
+  });
+
+  void dispose() {
+    keywordTec.dispose();
+    focusNode.dispose();
+  }
+
+  EmojiSearchModel copyWith({
+    String? keyword,
+    TextEditingController? keywordTec,
+    FocusNode? focusNode,
+    bool? hasFocus,
+  }) {
+    return EmojiSearchModel(
+      keyword: keyword ?? this.keyword,
+      keywordTec: keywordTec ?? this.keywordTec,
+      focusNode: focusNode ?? this.focusNode,
+      hasFocus: hasFocus ?? this.hasFocus,
+    );
+  }
 
   @override
-  String build() {
-    keywordTec = TextEditingController();
+  bool operator ==(covariant EmojiSearchModel other) {
+    if (identical(this, other)) return true;
+
+    return other.keyword == keyword &&
+        other.keywordTec == keywordTec &&
+        other.focusNode == focusNode &&
+        other.hasFocus == hasFocus;
+  }
+
+  @override
+  int get hashCode {
+    return keyword.hashCode ^
+        keywordTec.hashCode ^
+        focusNode.hashCode ^
+        hasFocus.hashCode;
+  }
+}
+
+@Riverpod(keepAlive: true)
+class EmojiSearchController extends _$EmojiSearchController {
+  @override
+  EmojiSearchModel build() {
+    final model = EmojiSearchModel(
+        keywordTec: TextEditingController(), focusNode: FocusNode());
     ref.onDispose(() {
-      keywordTec.dispose();
+      model.focusNode.removeListener(focusNodeListener);
+      model.dispose();
     });
-    return '';
+    model.focusNode.addListener(focusNodeListener);
+    return model;
   }
 
-  updateKeyword(String keyword) {
-    state = keyword;
+  focusNodeListener() {
+    if (state.hasFocus != state.focusNode.hasFocus) {
+      state = state.copyWith(hasFocus: state.focusNode.hasFocus);
+    }
   }
 
-  clearKeyword() {
-    keywordTec.clear();
-    state = '';
+  void updateKeyword(String value) {
+    state = state.copyWith(keyword: value);
+  }
+
+  void clearKeyword() {
+    state.keywordTec.clear();
+    state = state.copyWith();
   }
 }

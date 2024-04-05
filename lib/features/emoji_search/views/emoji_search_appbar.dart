@@ -8,14 +8,16 @@ class EmojiSearchAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final keywordProvider = ref.watch(emojiSearchKeywordProvider.notifier);
+    final keywordProvider = ref.watch(emojiSearchControllerProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
       child: TextField(
         controller: keywordProvider.keywordTec,
-        onChanged: (value) =>
-            ref.read(emojiSearchKeywordProvider.notifier).updateKeyword(value),
+        focusNode: keywordProvider.focusNode,
+        onChanged: (value) => ref
+            .read(emojiSearchControllerProvider.notifier)
+            .updateKeyword(value),
         decoration: InputDecoration(
           hintText: '搜索',
           prefixIcon: const Icon(Icons.search),
@@ -43,7 +45,7 @@ class EmojiSearchAppBar extends ConsumerWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(99),
             onTap: () {
-              ref.read(emojiSearchKeywordProvider.notifier).clearKeyword();
+              ref.read(emojiSearchControllerProvider.notifier).clearKeyword();
               KeyBoardControl.cancelKeyBoard(context);
             },
             child: Container(

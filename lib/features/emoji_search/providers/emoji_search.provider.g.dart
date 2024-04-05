@@ -6,22 +6,22 @@ part of 'emoji_search.provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$emojiSearchKeywordHash() =>
-    r'3f90ac71af380a7966287a684330ad7bc0c62199';
+String _$emojiSearchControllerHash() =>
+    r'd9fe8e9307a38a7ffb7ca3aeae1bb1f430bd5c35';
 
-/// See also [EmojiSearchKeyword].
-@ProviderFor(EmojiSearchKeyword)
-final emojiSearchKeywordProvider =
-    NotifierProvider<EmojiSearchKeyword, String>.internal(
-  EmojiSearchKeyword.new,
-  name: r'emojiSearchKeywordProvider',
+/// See also [EmojiSearchController].
+@ProviderFor(EmojiSearchController)
+final emojiSearchControllerProvider =
+    NotifierProvider<EmojiSearchController, EmojiSearchModel>.internal(
+  EmojiSearchController.new,
+  name: r'emojiSearchControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$emojiSearchKeywordHash,
+      : _$emojiSearchControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$EmojiSearchKeyword = Notifier<String>;
+typedef _$EmojiSearchController = Notifier<EmojiSearchModel>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

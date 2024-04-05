@@ -108,7 +108,8 @@ class EmojiList extends _$EmojiList {
 Future<List<Emoji>> filteredEmojiList(Ref ref) async {
   final all = ref.watch(emojiListProvider).value ?? [];
   final selectedTags = ref.watch(selectedEmojiTagListProvider);
-  final searchKeyword = ref.watch(emojiSearchKeywordProvider);
+  final searchKeyword =
+      ref.watch(emojiSearchControllerProvider.select((value) => value.keyword));
 
   List<String> searchKeywords = StringUtil.splitKeywords(searchKeyword);
   return all.where((emoji) {

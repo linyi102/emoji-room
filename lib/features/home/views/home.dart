@@ -3,7 +3,7 @@ import 'package:emoji_room/features/emoji_dir/views/emoji_dir_tile.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/persentation/emoji_grid_view.dart';
 import 'package:emoji_room/features/emoji_search/views/emoji_search_appbar.dart';
-import 'package:emoji_room/features/emoji_tags/views/emoji_tag_list_view.dart';
+import 'package:emoji_room/features/emoji_tags/views/emoji_tags_view.dart';
 import 'package:emoji_room/providers/theme.dart';
 import 'package:emoji_room/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
