@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:emoji_room/utils/string.dart';
 import 'package:path/path.dart' as p;
 
 class Emoji {
@@ -32,7 +33,7 @@ class Emoji {
     required this.cTime,
     required this.mTime,
   }) {
-    tags = title.isNotEmpty ? title.split(RegExp(r'\s+')) : [];
+    tags = StringUtil.splitKeywords(title);
   }
 
   factory Emoji.fromFile(File file, FileStat stat) {

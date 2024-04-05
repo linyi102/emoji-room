@@ -4,8 +4,10 @@ import 'package:emoji_room/constants/app_text.dart';
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
+import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/utils/permission.dart';
+import 'package:emoji_room/utils/string.dart';
 import 'package:emoji_room/utils/toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -106,13 +108,24 @@ class EmojiList extends _$EmojiList {
 Future<List<Emoji>> filteredEmojiList(Ref ref) async {
   final all = ref.watch(emojiListProvider).value ?? [];
   final selectedTags = ref.watch(selectedEmojiTagListProvider);
+  final searchKeyword = ref.watch(emojiSearchKeywordProvider);
+
+  List<String> searchKeywords = StringUtil.splitKeywords(searchKeyword);
   return all.where((emoji) {
-    for (final selectedTag in selectedTags) {
-      if (selectedTag.name != AppText.allTagName &&
-          !emoji.tags.contains(selectedTag.name)) {
+    // 该表情的标签列表是否有筛选的标签
+    for (final tag in selectedTags) {
+      if (tag.name != AppText.allTagName && !emoji.tags.contains(tag.name)) {
         return false;
       }
     }
+    // 该表情的标题是否有关键字
+    // 示例：搜索"a bc"时，查看是否有a并且有bc文本
+    for (final keyword in searchKeywords) {
+      if (!emoji.title.toLowerCase().contains(keyword.toLowerCase())) {
+        return false;
+      }
+    }
+
     return true;
   }).toList();
 }

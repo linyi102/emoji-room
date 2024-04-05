@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:emoji_room/features/home/views/home.dart';
 import 'package:emoji_room/providers/config.dart';
 import 'package:emoji_room/providers/theme.dart';
+import 'package:emoji_room/utils/keyboard.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +44,17 @@ class MyApp extends ConsumerWidget {
       ),
       builder: (context, child) {
         child = botToastBuilder(context, child);
+        child = MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: Scaffold(
+            // 顶层的resizeToAvoidBottomInset也要置为false
+            resizeToAvoidBottomInset: false,
+            body: GestureDetector(
+              onTap: () => KeyBoardControl.cancelKeyBoard(context),
+              child: child,
+            ),
+          ),
+        );
         return child;
       },
       navigatorObservers: [BotToastNavigatorObserver()],
