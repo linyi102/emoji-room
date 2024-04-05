@@ -34,8 +34,24 @@ class EmojiTagsView extends ConsumerWidget {
                       .selectTag(emojiTag, single: false);
                 },
                 child: Chip(
-                  avatar: emojiTag.isSelected ? const Icon(Icons.check) : null,
+                  // avatar: emojiTag.isSelected ? const Icon(Icons.check) : null,
                   label: Text(emojiTag.name),
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  side: emojiTag.isSelected
+                      ? BorderSide(color: Theme.of(context).primaryColor)
+                      : const BorderSide(style: BorderStyle.none),
+                  labelStyle: emojiTag.isSelected
+                      ? TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor)
+                      : null,
+                  // selectedColor: Theme.of(context).primaryColor,
+                  // selected: emojiTag.isSelected,
+                  visualDensity: VisualDensity.compact,
                 ),
               ),
             )

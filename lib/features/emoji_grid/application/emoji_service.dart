@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
-import 'package:emoji_room/features/emoji_tags/domain/emoji_tag.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/utils/permission.dart';
 import 'package:emoji_room/utils/toast.dart';
@@ -25,9 +24,7 @@ class EmojiService {
       return [];
     }
 
-    final emojis = await ref.watch(emojiRepositoryProvider).fetchEmojis();
-    updateEmojiTags(emojis);
-    return emojis;
+    return ref.watch(emojiRepositoryProvider).fetchEmojis();
   }
 
   Future<bool> tryRequestManageExternalStorage() async {
@@ -51,20 +48,6 @@ class EmojiService {
       ),
     );
     return hasPermission ?? false;
-  }
-
-  void updateEmojiTags(List<Emoji> emojis) {
-    Map<String, int> tagCnt = {};
-    for (final emoji in emojis) {
-      for (final tag in emoji.tags) {
-        tagCnt[tag] = tagCnt[tag] ?? 0 + 1;
-      }
-    }
-    List<EmojiTag> emojiTags = [];
-    for (final tagName in tagCnt.keys) {
-      emojiTags.add(EmojiTag(name: tagName, count: tagCnt[tagName] ?? 0));
-    }
-    ref.read(emojiTagListProvider.notifier).set(emojiTags);
   }
 
   Future<bool> pickEmojiDir() async {
@@ -124,7 +107,7 @@ Future<List<Emoji>> filteredEmojiList(Ref ref) async {
   final selectedTags = ref.watch(selectedEmojiTagListProvider);
   return all.where((emoji) {
     for (final selectedTag in selectedTags) {
-      if (!emoji.tags.contains(selectedTag.name)) {
+      if (selectedTag.name != '全部' && !emoji.tags.contains(selectedTag.name)) {
         return false;
       }
     }

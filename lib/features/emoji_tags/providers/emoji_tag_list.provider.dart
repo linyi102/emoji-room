@@ -1,3 +1,4 @@
+import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_tags/domain/emoji_tag.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,11 +9,20 @@ part 'emoji_tag_list.provider.g.dart';
 class EmojiTagList extends _$EmojiTagList {
   @override
   List<EmojiTag> build() {
-    return [];
-  }
-
-  void set(List<EmojiTag> tags) {
-    state = tags;
+    final emojis = ref.watch(emojiListProvider).value ?? [];
+    Map<String, int> tagCnt = {};
+    for (final emoji in emojis) {
+      for (final tag in emoji.tags) {
+        tagCnt[tag] = tagCnt[tag] ?? 0 + 1;
+      }
+    }
+    List<EmojiTag> emojiTags = [];
+    for (final tagName in tagCnt.keys) {
+      emojiTags.add(EmojiTag(name: tagName, count: tagCnt[tagName] ?? 0));
+    }
+    emojiTags.add(EmojiTag(name: '全部', count: emojis.length, isSelected: true));
+    emojiTags.sort((a, b) => -a.count.compareTo(b.count));
+    return emojiTags;
   }
 
   void selectTag(EmojiTag tag, {bool single = true}) {
