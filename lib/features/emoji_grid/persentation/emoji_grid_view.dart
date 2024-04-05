@@ -8,11 +8,11 @@ class EmojiGridView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emojis = ref.watch(emojiListProvider);
+    final emojis = ref.watch(filteredEmojiListProvider);
 
     return emojis.when(
       data: (emojis) => RefreshIndicator(
-        onRefresh: () => ref.refresh(emojiListProvider.future),
+        onRefresh: () => ref.refresh(filteredEmojiListProvider.future),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 100),

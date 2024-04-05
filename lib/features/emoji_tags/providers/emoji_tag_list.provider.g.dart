@@ -22,7 +22,7 @@ final selectedEmojiTagListProvider = Provider<List<EmojiTag>>.internal(
 );
 
 typedef SelectedEmojiTagListRef = ProviderRef<List<EmojiTag>>;
-String _$emojiTagListHash() => r'9f5cabe7ac789d915a4809eeef5109290482ce25';
+String _$emojiTagListHash() => r'fac81ca76206807ba280897dc95219ac53b794f1';
 
 /// See also [EmojiTagList].
 @ProviderFor(EmojiTagList)

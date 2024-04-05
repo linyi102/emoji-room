@@ -13,7 +13,7 @@ class EmojiTagList extends _$EmojiTagList {
     Map<String, int> tagCnt = {};
     for (final emoji in emojis) {
       for (final tag in emoji.tags) {
-        tagCnt[tag] = tagCnt[tag] ?? 0 + 1;
+        tagCnt[tag] = (tagCnt[tag] ?? 0) + 1;
       }
     }
     List<EmojiTag> emojiTags = [];
