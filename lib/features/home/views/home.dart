@@ -9,11 +9,11 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emojis = ref.watch(emojisProvider);
+    final emojiTotal = ref.watch(emojiTotalProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('表情包 ${emojis.value?.length ?? ""}'),
+        title: Text('表情包 ${emojiTotal == 0 ? '' : emojiTotal}'),
       ),
       body: const Column(
         children: [

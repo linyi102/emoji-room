@@ -30,8 +30,7 @@ class EmojiRepository {
   }
 
   Future<Emoji> mergeEmoji(String dirPath, Emoji fileEmoji) async {
-    File recordFile =
-        File(p.join(dirPath, '.emojiroom', fileEmoji.size.toString()));
+    File recordFile = File(p.join(dirPath, '.emojiroom', fileEmoji.id));
     if (!await recordFile.exists()) return fileEmoji;
 
     final configEmoji = Emoji.fromJson(await recordFile.readAsString());

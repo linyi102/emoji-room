@@ -11,11 +11,11 @@ class EmojiGridView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emojis = ref.watch(emojisProvider);
+    final emojis = ref.watch(emojiListProvider);
 
     return emojis.when(
       data: (emojis) => RefreshIndicator(
-        onRefresh: () => ref.refresh(emojisProvider.future),
+        onRefresh: () => ref.refresh(emojiListProvider.future),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 100),
@@ -43,10 +43,11 @@ class EmojiGridView extends ConsumerWidget {
   }
 
   Future<void> shareEmoji(WidgetRef ref, Emoji emoji, BuildContext context) =>
-      ref.read(emojiServiceProvider).shareEmoji(emoji, context);
+      ref.read(emojiServiceProvider).shareEmoji(emoji);
 
   Future<dynamic> showDetailView(BuildContext context, Emoji emoji) {
     return showCommonModalBottomSheet(
-        context: context, builder: (context) => EmojiDetailView(emoji));
+        context: context,
+        builder: (context) => ProviderScope(child: EmojiDetailView(emoji.id)));
   }
 }

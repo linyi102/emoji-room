@@ -4,18 +4,20 @@ import 'dart:io';
 import 'package:path/path.dart' as p;
 
 class Emoji {
-  File file;
-  String filePath;
-  int size;
-  String title;
-  int usageCount;
-  bool ignore;
-  DateTime cTime;
-  DateTime mTime;
+  final String id;
+  final File file;
+  final String fileName;
+  final int size;
+  final String title;
+  final int usageCount;
+  final bool ignore;
+  final DateTime cTime;
+  final DateTime mTime;
 
   Emoji({
+    required this.id,
     required this.file,
-    required this.filePath,
+    required this.fileName,
     required this.size,
     required this.title,
     required this.usageCount,
@@ -26,10 +28,14 @@ class Emoji {
 
   factory Emoji.fromFile(File file) {
     final now = DateTime.now();
+    final size = file.statSync().size;
+    final fileName = p.basename(file.path);
+
     return Emoji(
+      id: fileName,
       file: file,
-      filePath: p.basename(file.path),
-      size: file.statSync().size,
+      fileName: fileName,
+      size: size,
       title: '',
       usageCount: 0,
       ignore: false,
@@ -38,9 +44,27 @@ class Emoji {
     );
   }
 
+  static const String _invaidId = 'invalid';
+  bool get isInvalid => id == _invaidId;
+
+  factory Emoji.invalid() {
+    return Emoji(
+      id: _invaidId,
+      file: File(''),
+      fileName: '',
+      size: 0,
+      title: '',
+      usageCount: 0,
+      ignore: false,
+      cTime: DateTime(0),
+      mTime: DateTime(0),
+    );
+  }
+
   Emoji copyWith({
+    String? id,
     File? file,
-    String? filePath,
+    String? fileName,
     int? size,
     String? title,
     int? usageCount,
@@ -49,8 +73,9 @@ class Emoji {
     DateTime? mTime,
   }) {
     return Emoji(
+      id: id ?? this.id,
       file: file ?? this.file,
-      filePath: filePath ?? this.filePath,
+      fileName: fileName ?? this.fileName,
       size: size ?? this.size,
       title: title ?? this.title,
       usageCount: usageCount ?? this.usageCount,
@@ -62,7 +87,7 @@ class Emoji {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'filePath': filePath,
+      'filePath': fileName,
       'size': size,
       'title': title,
       'usageCount': usageCount,
@@ -74,8 +99,9 @@ class Emoji {
 
   factory Emoji.fromMap(Map<String, dynamic> map) {
     return Emoji(
+      id: map['id'] as String,
       file: File(''),
-      filePath: map['filePath'] as String,
+      fileName: map['filePath'] as String,
       size: map['size'] as int,
       title: map['title'] as String,
       usageCount: map['usageCount'] as int,
@@ -92,7 +118,7 @@ class Emoji {
 
   @override
   String toString() {
-    return 'Emoji(file: $file, filePath: $filePath, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
+    return 'Emoji(file: $file, filePath: $fileName, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
   }
 
   @override
@@ -100,7 +126,7 @@ class Emoji {
     if (identical(this, other)) return true;
 
     return other.file == file &&
-        other.filePath == filePath &&
+        other.fileName == fileName &&
         other.size == size &&
         other.title == title &&
         other.usageCount == usageCount &&
@@ -112,7 +138,7 @@ class Emoji {
   @override
   int get hashCode {
     return file.hashCode ^
-        filePath.hashCode ^
+        fileName.hashCode ^
         size.hashCode ^
         title.hashCode ^
         usageCount.hashCode ^

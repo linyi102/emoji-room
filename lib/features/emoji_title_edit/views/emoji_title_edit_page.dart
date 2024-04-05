@@ -1,15 +1,17 @@
 import 'package:emoji_room/features/emoji_detail/providers/current_emoji.provider.dart';
+import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EmojiTitleEditPage extends ConsumerWidget {
-  const EmojiTitleEditPage(this.currentEmoji, {super.key});
-  final CurrentEmoji currentEmoji;
+  const EmojiTitleEditPage(this.emojiId, {super.key});
+  final String emojiId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final emoji = ref.watch(currentEmojiProvider(emojiId));
     final TextEditingController titleTc =
-        TextEditingController(text: currentEmoji.emoji.title);
+        TextEditingController(text: emoji.title);
 
     return Scaffold(
       appBar: AppBar(
@@ -18,7 +20,9 @@ class EmojiTitleEditPage extends ConsumerWidget {
         actions: [
           TextButton(
               onPressed: () {
-                currentEmoji.modTitle(titleTc.text);
+                ref
+                    .read(emojiListProvider.notifier)
+                    .updateItem(emoji.copyWith(title: titleTc.text.trim()));
                 Navigator.pop(context);
               },
               child: const Text('完成'))

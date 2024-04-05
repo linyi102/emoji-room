@@ -20,19 +20,34 @@ final emojiServiceProvider = AutoDisposeProvider<EmojiService>.internal(
 );
 
 typedef EmojiServiceRef = AutoDisposeProviderRef<EmojiService>;
-String _$emojisHash() => r'870421611e6047ac8a9d7cd55e78a7250d3a24d2';
+String _$emojiTotalHash() => r'7cd3c0777017076c09071eabfb376a847fd69ca8';
 
-/// See also [emojis].
-@ProviderFor(emojis)
-final emojisProvider = AutoDisposeFutureProvider<List<Emoji>>.internal(
-  emojis,
-  name: r'emojisProvider',
+/// See also [emojiTotal].
+@ProviderFor(emojiTotal)
+final emojiTotalProvider = AutoDisposeProvider<int>.internal(
+  emojiTotal,
+  name: r'emojiTotalProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$emojisHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$emojiTotalHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef EmojisRef = AutoDisposeFutureProviderRef<List<Emoji>>;
+typedef EmojiTotalRef = AutoDisposeProviderRef<int>;
+String _$emojiListHash() => r'b501284306e768395cb05b629bc11c65dbfa9ccd';
+
+/// See also [EmojiList].
+@ProviderFor(EmojiList)
+final emojiListProvider =
+    AsyncNotifierProvider<EmojiList, List<Emoji>>.internal(
+  EmojiList.new,
+  name: r'emojiListProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$emojiListHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EmojiList = AsyncNotifier<List<Emoji>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

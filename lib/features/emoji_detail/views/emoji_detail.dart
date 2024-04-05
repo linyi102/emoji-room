@@ -12,24 +12,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EmojiDetailView extends ConsumerWidget {
-  const EmojiDetailView(this.emoji, {super.key});
-  final Emoji emoji;
+  const EmojiDetailView(this.emojiId, {super.key});
+  final String emojiId;
 
   double get emojiSize => 150;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentEmoji = ref.watch(currentEmojiProvider(emoji).notifier);
+    final emoji = ref.watch(currentEmojiProvider(emojiId));
     return Scaffold(
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              _buildImage(currentEmoji),
+              _buildImage(emoji),
               const GapH(8),
-              _buildTitle(currentEmoji, context),
+              _buildTitle(emoji, context),
               const GapH(2),
-              _buildSize(currentEmoji, context),
+              _buildSize(emoji, context),
               const GapH(2),
             ],
           ),
@@ -40,13 +40,13 @@ class EmojiDetailView extends ConsumerWidget {
           children: [
             Align(
                 alignment: Alignment.center,
-                child: _buildUsageCount(currentEmoji, context)),
-            _buildShareBottomButton(currentEmoji, context, ref),
+                child: _buildUsageCount(emoji, context)),
+            _buildShareBottomButton(emoji, context, ref),
           ],
         ));
   }
 
-  Align _buildImage(CurrentEmoji currentEmoji) {
+  Align _buildImage(Emoji emoji) {
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -55,7 +55,7 @@ class EmojiDetailView extends ConsumerWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
           child: Image.file(
-            currentEmoji.emoji.file,
+            emoji.file,
             fit: BoxFit.fitHeight,
           ),
         ),
@@ -63,12 +63,11 @@ class EmojiDetailView extends ConsumerWidget {
     );
   }
 
-  Widget _buildTitle(CurrentEmoji currentEmoji, BuildContext context) {
-    final title = currentEmoji.emoji.title;
+  Widget _buildTitle(Emoji emoji, BuildContext context) {
+    final title = emoji.title;
     return InkWell(
       borderRadius: BorderRadius.circular(6),
-      onTap: () =>
-          RouteUtil.materialTo(context, EmojiTitleEditPage(currentEmoji)),
+      onTap: () => RouteUtil.materialTo(context, EmojiTitleEditPage(emoji.id)),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: Text(title.isNotEmpty ? title : '添加标题',
@@ -77,9 +76,9 @@ class EmojiDetailView extends ConsumerWidget {
     );
   }
 
-  Text _buildSize(CurrentEmoji currentEmoji, BuildContext context) {
+  Text _buildSize(Emoji emoji, BuildContext context) {
     return Text(
-      FileUtil.getReadableFileSize(currentEmoji.emoji.size),
+      FileUtil.getReadableFileSize(emoji.size),
       style: Theme.of(context)
           .textTheme
           .bodySmall
@@ -87,9 +86,9 @@ class EmojiDetailView extends ConsumerWidget {
     );
   }
 
-  Text _buildUsageCount(CurrentEmoji currentEmoji, BuildContext context) {
+  Text _buildUsageCount(Emoji emoji, BuildContext context) {
     return Text(
-      '共分享了 ${currentEmoji.emoji.usageCount} 次',
+      '共分享了 ${emoji.usageCount} 次',
       style: Theme.of(context)
           .textTheme
           .bodySmall
@@ -98,17 +97,15 @@ class EmojiDetailView extends ConsumerWidget {
   }
 
   Padding _buildShareBottomButton(
-      CurrentEmoji currentEmoji, BuildContext context, WidgetRef ref) {
+      Emoji emoji, BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: SizedBox(
         height: 45,
         child: ElevatedButton(
             onPressed: () {
-              ref
-                  .read(emojiServiceProvider)
-                  .shareEmoji(currentEmoji.emoji, context);
-              Navigator.pop(context);
+              ref.read(emojiServiceProvider).shareEmoji(emoji);
+              // Navigator.pop(context);
             },
             child: Text(Platform.isAndroid ? '分享' : '复制')),
       ),

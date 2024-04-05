@@ -6,7 +6,7 @@ part of 'current_emoji.provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$currentEmojiHash() => r'87db9b2fc47c09f6524929692a01e6a67d572c40';
+String _$currentEmojiHash() => r'c98a9fb7bde916b294f30f405ef4978c0f664ab8';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,29 +29,21 @@ class _SystemHash {
   }
 }
 
-abstract class _$CurrentEmoji extends BuildlessAutoDisposeNotifier<Emoji> {
-  late final Emoji emoji;
-
-  Emoji build(
-    Emoji emoji,
-  );
-}
-
-/// See also [CurrentEmoji].
-@ProviderFor(CurrentEmoji)
+/// See also [currentEmoji].
+@ProviderFor(currentEmoji)
 const currentEmojiProvider = CurrentEmojiFamily();
 
-/// See also [CurrentEmoji].
+/// See also [currentEmoji].
 class CurrentEmojiFamily extends Family<Emoji> {
-  /// See also [CurrentEmoji].
+  /// See also [currentEmoji].
   const CurrentEmojiFamily();
 
-  /// See also [CurrentEmoji].
+  /// See also [currentEmoji].
   CurrentEmojiProvider call(
-    Emoji emoji,
+    String id,
   ) {
     return CurrentEmojiProvider(
-      emoji,
+      id,
     );
   }
 
@@ -60,7 +52,7 @@ class CurrentEmojiFamily extends Family<Emoji> {
     covariant CurrentEmojiProvider provider,
   ) {
     return call(
-      provider.emoji,
+      provider.id,
     );
   }
 
@@ -79,14 +71,16 @@ class CurrentEmojiFamily extends Family<Emoji> {
   String? get name => r'currentEmojiProvider';
 }
 
-/// See also [CurrentEmoji].
-class CurrentEmojiProvider
-    extends AutoDisposeNotifierProviderImpl<CurrentEmoji, Emoji> {
-  /// See also [CurrentEmoji].
+/// See also [currentEmoji].
+class CurrentEmojiProvider extends AutoDisposeProvider<Emoji> {
+  /// See also [currentEmoji].
   CurrentEmojiProvider(
-    Emoji emoji,
+    String id,
   ) : this._internal(
-          () => CurrentEmoji()..emoji = emoji,
+          (ref) => currentEmoji(
+            ref as CurrentEmojiRef,
+            id,
+          ),
           from: currentEmojiProvider,
           name: r'currentEmojiProvider',
           debugGetCreateSourceHash:
@@ -96,7 +90,7 @@ class CurrentEmojiProvider
           dependencies: CurrentEmojiFamily._dependencies,
           allTransitiveDependencies:
               CurrentEmojiFamily._allTransitiveDependencies,
-          emoji: emoji,
+          id: id,
         );
 
   CurrentEmojiProvider._internal(
@@ -106,67 +100,59 @@ class CurrentEmojiProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.emoji,
+    required this.id,
   }) : super.internal();
 
-  final Emoji emoji;
+  final String id;
 
   @override
-  Emoji runNotifierBuild(
-    covariant CurrentEmoji notifier,
+  Override overrideWith(
+    Emoji Function(CurrentEmojiRef provider) create,
   ) {
-    return notifier.build(
-      emoji,
-    );
-  }
-
-  @override
-  Override overrideWith(CurrentEmoji Function() create) {
     return ProviderOverride(
       origin: this,
       override: CurrentEmojiProvider._internal(
-        () => create()..emoji = emoji,
+        (ref) => create(ref as CurrentEmojiRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        emoji: emoji,
+        id: id,
       ),
     );
   }
 
   @override
-  AutoDisposeNotifierProviderElement<CurrentEmoji, Emoji> createElement() {
+  AutoDisposeProviderElement<Emoji> createElement() {
     return _CurrentEmojiProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CurrentEmojiProvider && other.emoji == emoji;
+    return other is CurrentEmojiProvider && other.id == id;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, emoji.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin CurrentEmojiRef on AutoDisposeNotifierProviderRef<Emoji> {
-  /// The parameter `emoji` of this provider.
-  Emoji get emoji;
+mixin CurrentEmojiRef on AutoDisposeProviderRef<Emoji> {
+  /// The parameter `id` of this provider.
+  String get id;
 }
 
-class _CurrentEmojiProviderElement
-    extends AutoDisposeNotifierProviderElement<CurrentEmoji, Emoji>
+class _CurrentEmojiProviderElement extends AutoDisposeProviderElement<Emoji>
     with CurrentEmojiRef {
   _CurrentEmojiProviderElement(super.provider);
 
   @override
-  Emoji get emoji => (origin as CurrentEmojiProvider).emoji;
+  String get id => (origin as CurrentEmojiProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

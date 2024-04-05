@@ -6,7 +6,7 @@ class ToastUtil {
     if (msg.isEmpty) return;
 
     BotToast.showCustomText(
-      align: const Alignment(0, 0.8),
+      align: const Alignment(0, -0.8),
       onlyOne: true,
       toastBuilder: (cancelFunc) {
         const bg = Colors.black;

@@ -5,7 +5,6 @@ import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/utils/toast.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -24,7 +23,7 @@ class EmojiService {
     return true;
   }
 
-  Future<void> shareEmoji(Emoji emoji, BuildContext context) async {
+  Future<void> shareEmoji(Emoji emoji) async {
     final filePath = emoji.file.path;
     if (Platform.isAndroid) {
       // ignore: deprecated_member_use
@@ -37,11 +36,8 @@ class EmojiService {
       ToastUtil.showText('已复制到剪切板');
     }
 
-    final index = ref.read(emojisProvider).value?.indexOf(emoji);
-    emoji = emoji.copyWith(usageCount: emoji.usageCount + 1);
-    if (index != null && index >= 0) {
-      ref.read(emojisProvider).value?[index] = emoji;
-    }
+    final newEmoji = emoji.copyWith(usageCount: emoji.usageCount + 1);
+    ref.read(emojiListProvider.notifier).updateItem(newEmoji);
   }
 }
 
@@ -50,10 +46,27 @@ EmojiService emojiService(Ref ref) {
   return EmojiService(ref);
 }
 
-@riverpod
-Future<List<Emoji>> emojis(Ref ref) async {
-  final dirPath = ref.watch(emojiDirPathProvider);
-  if (dirPath == null || dirPath.isEmpty) return [];
+@Riverpod(keepAlive: true)
+class EmojiList extends _$EmojiList {
+  @override
+  FutureOr<List<Emoji>> build() {
+    final dirPath = ref.watch(emojiDirPathProvider);
+    if (dirPath == null || dirPath.isEmpty) return [];
 
-  return ref.watch(emojiRepositoryProvider).fetchEmojis(dirPath);
+    return ref.watch(emojiRepositoryProvider).fetchEmojis(dirPath);
+  }
+
+  updateItem(Emoji newEmoji) {
+    final emojis = state.value ?? [];
+    state = AsyncData([
+      for (final emoji in emojis)
+        if (emoji.id == newEmoji.id) newEmoji else emoji
+    ]);
+  }
+}
+
+@riverpod
+int emojiTotal(Ref ref) {
+  final emojis = ref.watch(emojiListProvider);
+  return emojis.value?.length ?? 0;
 }
