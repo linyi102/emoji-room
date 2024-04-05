@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:emoji_room/constants/app_theme.dart';
 import 'package:emoji_room/features/emoji_detail/providers/current_emoji.provider.dart';
+import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_title_edit/views/emoji_title_edit_page.dart';
 import 'package:emoji_room/routing/router.dart';
@@ -40,7 +41,7 @@ class EmojiDetailView extends ConsumerWidget {
             Align(
                 alignment: Alignment.center,
                 child: _buildUsageCount(currentEmoji, context)),
-            _buildShareBottomButton(currentEmoji, context),
+            _buildShareBottomButton(currentEmoji, context, ref),
           ],
         ));
   }
@@ -97,14 +98,16 @@ class EmojiDetailView extends ConsumerWidget {
   }
 
   Padding _buildShareBottomButton(
-      CurrentEmoji currentEmoji, BuildContext context) {
+      CurrentEmoji currentEmoji, BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: SizedBox(
         height: 45,
         child: ElevatedButton(
             onPressed: () {
-              currentEmoji.share();
+              ref
+                  .read(emojiServiceProvider)
+                  .shareEmoji(currentEmoji.emoji, context);
               Navigator.pop(context);
             },
             child: Text(Platform.isAndroid ? '分享' : '复制')),

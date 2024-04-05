@@ -1,6 +1,7 @@
 import 'package:emoji_room/constants/app_theme.dart';
 import 'package:emoji_room/features/emoji_detail/views/emoji_detail.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
+import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,9 +24,8 @@ class EmojiGridView extends ConsumerWidget {
             final emoji = emojis[index];
             return InkWell(
               borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
-              onTap: () => showCommonModalBottomSheet(
-                  context: context,
-                  builder: (context) => EmojiDetailView(emoji)),
+              onTap: () => showDetailView(context, emoji),
+              onLongPress: () => shareEmoji(ref, emoji, context),
               child: Container(
                 padding: const EdgeInsets.all(8.0),
                 child: ClipRRect(
@@ -40,5 +40,13 @@ class EmojiGridView extends ConsumerWidget {
       error: (error, stackTrace) => Center(child: Text(error.toString())),
       loading: () => const Center(child: CircularProgressIndicator()),
     );
+  }
+
+  Future<void> shareEmoji(WidgetRef ref, Emoji emoji, BuildContext context) =>
+      ref.read(emojiServiceProvider).shareEmoji(emoji, context);
+
+  Future<dynamic> showDetailView(BuildContext context, Emoji emoji) {
+    return showCommonModalBottomSheet(
+        context: context, builder: (context) => EmojiDetailView(emoji));
   }
 }
