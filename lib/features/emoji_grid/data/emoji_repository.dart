@@ -17,7 +17,8 @@ class EmojiRepository {
   Future<List<Emoji>> fetchEmojis() async {
     const qqDirPath = '/storage/emulated/0/tencent/QQ_Favorite/';
     List<Emoji> emojis = [
-      ...await _fetchDirEmojis(mainDirPath),
+      ...await _fetchDirEmojis(mainDirPath)
+        ..forEach((e) => e.tags.add('主目录')),
       ...(await _fetchDirEmojis(qqDirPath, mustBeImageSuffix: false))
         ..forEach((e) => e.tags.add('QQ'))
     ];
