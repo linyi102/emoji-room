@@ -1,9 +1,11 @@
+import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_dir/views/emoji_dir_tile.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/persentation/emoji_grid_view.dart';
 import 'package:emoji_room/features/emoji_search/views/emoji_search_appbar.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tag_list_view.dart';
 import 'package:emoji_room/providers/theme.dart';
+import 'package:emoji_room/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,13 +14,21 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final emojiDirPath = ref.watch(emojiDirPathProvider);
     final emojiTotal = ref.watch(emojiTotalProvider);
     final brightness = ref.watch(themeBrightnessProvider);
+
+    bool hasSelectMainDir = emojiDirPath != null && emojiDirPath.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('表情包 ${emojiTotal == 0 ? '' : emojiTotal}'),
         actions: [
+          IconButton(
+              onPressed: () {
+                _showSettingBottomSheet(context);
+              },
+              icon: const Icon(Icons.settings)),
           IconButton(
             isSelected: brightness == Brightness.dark,
             onPressed: ref.read(themeBrightnessProvider.notifier).toggle,
@@ -27,13 +37,33 @@ class HomePage extends ConsumerWidget {
           ),
         ],
       ),
-      body: const Column(
-        children: [
-          EmojiSearchAppBar(),
-          EmojiDirTile(),
-          EmojiTagsView(),
-          Expanded(child: EmojiGridView()),
-        ],
+      body: !hasSelectMainDir
+          ? const EmojiDirTile()
+          : const Column(
+              children: [
+                EmojiSearchAppBar(),
+                EmojiTagsView(),
+                Expanded(child: EmojiGridView()),
+              ],
+            ),
+    );
+  }
+
+  Future<dynamic> _showSettingBottomSheet(BuildContext context) {
+    return showCommonModalBottomSheet(
+      context: context,
+      builder: (context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('设置'),
+          automaticallyImplyLeading: false,
+        ),
+        body: const SingleChildScrollView(
+          child: Column(
+            children: [
+              EmojiDirTile(),
+            ],
+          ),
+        ),
       ),
     );
   }

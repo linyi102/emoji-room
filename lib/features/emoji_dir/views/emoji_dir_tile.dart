@@ -10,6 +10,7 @@ class EmojiDirTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dirPath = ref.watch(emojiDirPathProvider);
     return ListTile(
+      leading: const Icon(Icons.folder),
       title: const Text('选择主目录'),
       subtitle: Text(dirPath ?? '未选择'),
       onTap: ref.read(emojiServiceProvider).pickEmojiDir,
