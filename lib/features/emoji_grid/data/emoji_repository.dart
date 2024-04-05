@@ -39,10 +39,14 @@ class EmojiRepository {
     File recordFile = _getEmojiRecordFile(emoji);
     if (!await recordFile.exists()) return emoji;
 
-    final recordEmoji = Emoji.fromJson(await recordFile.readAsString());
-    return recordEmoji.copyWith(
-      file: emoji.file,
-    );
+    late String json;
+    try {
+      json = await recordFile.readAsString();
+    } catch (e) {
+      return emoji;
+    }
+    final recordEmoji = Emoji.fromJson(json);
+    return recordEmoji.copyWith(file: emoji.file);
   }
 
   Future<bool> saveEmoji(Emoji emoji) async {

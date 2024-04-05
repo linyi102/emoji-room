@@ -5,8 +5,10 @@ import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_tags/domain/emoji_tag.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
+import 'package:emoji_room/utils/permission.dart';
 import 'package:emoji_room/utils/toast.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pasteboard/pasteboard.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,8 +21,39 @@ class EmojiService {
   EmojiService(this.ref);
 
   Future<List<Emoji>> fetchEmojis() async {
-    final emojis = await ref.watch(emojiRepositoryProvider).fetchEmojis();
+    if (!await tryRequestManageExternalStorage()) {
+      return [];
+    }
 
+    final emojis = await ref.watch(emojiRepositoryProvider).fetchEmojis();
+    updateEmojiTags(emojis);
+    return emojis;
+  }
+
+  Future<bool> tryRequestManageExternalStorage() async {
+    bool? hasPermission = await PermissionUtil.hasManageExternalStorage();
+    if (hasPermission) return true;
+
+    hasPermission = await ToastUtil.showDialog<bool>(
+      builder: (close) => AlertDialog(
+        title: const Text('提示'),
+        content: const Text('需要申请管理文件权限来保存配置，是否前往设置页授予权限？'),
+        actions: [
+          TextButton(
+              onPressed: () async {
+                final hasPermission =
+                    await PermissionUtil.requestManageExternalStorage();
+                if (hasPermission) close(result: true);
+              },
+              child: const Text('前往')),
+          TextButton(onPressed: close, child: const Text('取消')),
+        ],
+      ),
+    );
+    return hasPermission ?? false;
+  }
+
+  void updateEmojiTags(List<Emoji> emojis) {
     Map<String, int> tagCnt = {};
     for (final emoji in emojis) {
       for (final tag in emoji.tags) {
@@ -32,7 +65,6 @@ class EmojiService {
       emojiTags.add(EmojiTag(name: tagName, count: tagCnt[tagName] ?? 0));
     }
     ref.read(emojiTagListProvider.notifier).set(emojiTags);
-    return emojis;
   }
 
   Future<bool> pickEmojiDir() async {
