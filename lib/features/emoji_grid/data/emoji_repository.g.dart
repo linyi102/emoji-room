@@ -6,7 +6,7 @@ part of 'emoji_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$emojiRepositoryHash() => r'0885e4de74cf0bb29cf9de0a7c43aa2e54099a71';
+String _$emojiRepositoryHash() => r'6bc7a7a44d7769c80646a88a630a29840c75e2b4';
 
 /// See also [emojiRepository].
 @ProviderFor(emojiRepository)

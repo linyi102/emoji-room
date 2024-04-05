@@ -11,11 +11,24 @@ import 'package:path/path.dart' as p;
 part 'emoji_repository.g.dart';
 
 class EmojiRepository {
-  final String dirPath;
-  EmojiRepository({required this.dirPath});
+  final String mainDirPath;
+  EmojiRepository({required this.mainDirPath});
 
   Future<List<Emoji>> fetchEmojis() async {
-    if (!await _existDir()) return [];
+    const qqDirPath = '/storage/emulated/0/tencent/QQ_Favorite/';
+    List<Emoji> emojis = [
+      ...await _fetchDirEmojis(mainDirPath),
+      ...(await _fetchDirEmojis(qqDirPath, mustBeImageSuffix: false))
+        ..forEach((e) => e.tags.add('QQ'))
+    ];
+    emojis.sort((a, b) =>
+        -a.file.statSync().modified.compareTo(b.file.statSync().modified));
+    return emojis;
+  }
+
+  Future<List<Emoji>> _fetchDirEmojis(String dirPath,
+      {bool mustBeImageSuffix = true}) async {
+    if (!await _existDir(dirPath)) return [];
 
     List<Emoji> emojis = [];
     final fileStream = Directory(dirPath).list();
@@ -24,18 +37,16 @@ class EmojiRepository {
       bool isFile = stat.type == FileSystemEntityType.file;
       bool isImage = FileUtil.isImage(fse.path);
 
-      if (isFile && isImage) {
+      if (isFile && (isImage || !mustBeImageSuffix)) {
         final fileEmoji = Emoji.fromFile(File(fse.path));
-        final emoji = await mergeEmoji(fileEmoji);
+        final emoji = await _mergeEmoji(fileEmoji);
         emojis.add(emoji);
       }
     }
-    emojis.sort((a, b) =>
-        -a.file.statSync().modified.compareTo(b.file.statSync().modified));
     return emojis;
   }
 
-  Future<Emoji> mergeEmoji(Emoji emoji) async {
+  Future<Emoji> _mergeEmoji(Emoji emoji) async {
     File recordFile = _getEmojiRecordFile(emoji);
     if (!await recordFile.exists()) return emoji;
 
@@ -50,7 +61,7 @@ class EmojiRepository {
   }
 
   Future<bool> saveEmoji(Emoji emoji) async {
-    if (!await _existDir()) return false;
+    if (!await _existDir(mainDirPath)) return false;
 
     File recordFile = _getEmojiRecordFile(emoji);
     try {
@@ -64,10 +75,10 @@ class EmojiRepository {
   }
 
   _getEmojiRecordFile(Emoji emoji) {
-    return File(p.join(dirPath, '.emojiroom', emoji.id));
+    return File(p.join(mainDirPath, '.emojiroom', emoji.id));
   }
 
-  Future<bool> _existDir() async {
+  Future<bool> _existDir(String dirPath) async {
     final dir = Directory(dirPath);
     return dir.exists();
   }
@@ -76,5 +87,5 @@ class EmojiRepository {
 @Riverpod(keepAlive: true)
 EmojiRepository emojiRepository(Ref ref) {
   final dirPath = ref.watch(emojiDirPathProvider);
-  return EmojiRepository(dirPath: dirPath ?? '');
+  return EmojiRepository(mainDirPath: dirPath ?? '');
 }
