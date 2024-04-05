@@ -13,6 +13,7 @@ class Emoji {
   final bool ignore;
   final DateTime cTime;
   final DateTime mTime;
+  late final List<String> tags;
 
   Emoji({
     required this.id,
@@ -24,17 +25,18 @@ class Emoji {
     required this.ignore,
     required this.cTime,
     required this.mTime,
-  });
+  }) {
+    tags = title.isNotEmpty ? title.split(RegExp(r'\s+')) : [];
+  }
 
   factory Emoji.fromFile(File file) {
     final now = DateTime.now();
     final size = file.statSync().size;
-    final fileName = p.basename(file.path);
 
     return Emoji(
-      id: fileName,
+      id: p.basenameWithoutExtension(file.path),
       file: file,
-      fileName: fileName,
+      fileName: p.basename(file.path),
       size: size,
       title: '',
       usageCount: 0,
@@ -87,7 +89,8 @@ class Emoji {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'filePath': fileName,
+      'id': id,
+      'fileName': fileName,
       'size': size,
       'title': title,
       'usageCount': usageCount,
@@ -101,7 +104,7 @@ class Emoji {
     return Emoji(
       id: map['id'] as String,
       file: File(''),
-      fileName: map['filePath'] as String,
+      fileName: map['fileName'] as String,
       size: map['size'] as int,
       title: map['title'] as String,
       usageCount: map['usageCount'] as int,
@@ -118,7 +121,7 @@ class Emoji {
 
   @override
   String toString() {
-    return 'Emoji(file: $file, filePath: $fileName, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
+    return 'Emoji(file: $file, fileName: $fileName, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
   }
 
   @override

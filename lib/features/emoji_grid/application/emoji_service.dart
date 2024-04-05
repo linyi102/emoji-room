@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
+import 'package:emoji_room/features/emoji_tags/domain/emoji_tag.dart';
+import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/utils/toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +17,23 @@ part 'emoji_service.g.dart';
 class EmojiService {
   final Ref ref;
   EmojiService(this.ref);
+
+  Future<List<Emoji>> fetchEmojis() async {
+    final emojis = await ref.watch(emojiRepositoryProvider).fetchEmojis();
+
+    Map<String, int> tagCnt = {};
+    for (final emoji in emojis) {
+      for (final tag in emoji.tags) {
+        tagCnt[tag] = tagCnt[tag] ?? 0 + 1;
+      }
+    }
+    List<EmojiTag> emojiTags = [];
+    for (final tagName in tagCnt.keys) {
+      emojiTags.add(EmojiTag(name: tagName, count: tagCnt[tagName] ?? 0));
+    }
+    ref.read(emojiTagListProvider.notifier).set(emojiTags);
+    return emojis;
+  }
 
   Future<bool> pickEmojiDir() async {
     String? selectedDirPath = await FilePicker.platform.getDirectoryPath();
@@ -41,7 +60,7 @@ class EmojiService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 EmojiService emojiService(Ref ref) {
   return EmojiService(ref);
 }
@@ -50,7 +69,7 @@ EmojiService emojiService(Ref ref) {
 class EmojiList extends _$EmojiList {
   @override
   FutureOr<List<Emoji>> build() {
-    return ref.watch(emojiRepositoryProvider).fetchEmojis();
+    return ref.watch(emojiServiceProvider).fetchEmojis();
   }
 
   updateItem(Emoji newEmoji) {
@@ -65,6 +84,20 @@ class EmojiList extends _$EmojiList {
           emoji
     ]);
   }
+}
+
+@riverpod
+Future<List<Emoji>> filteredEmojiList(Ref ref) async {
+  final all = ref.watch(emojiListProvider).value ?? [];
+  final selectedTags = ref.watch(selectedEmojiTagListProvider);
+  return all.where((emoji) {
+    for (final selectedTag in selectedTags) {
+      if (!emoji.tags.contains(selectedTag.name)) {
+        return false;
+      }
+    }
+    return true;
+  }).toList();
 }
 
 @riverpod
