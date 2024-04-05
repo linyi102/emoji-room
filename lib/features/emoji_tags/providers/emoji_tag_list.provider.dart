@@ -1,3 +1,4 @@
+import 'package:emoji_room/constants/app_text.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_tags/domain/emoji_tag.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +21,8 @@ class EmojiTagList extends _$EmojiTagList {
     for (final tagName in tagCnt.keys) {
       emojiTags.add(EmojiTag(name: tagName, count: tagCnt[tagName] ?? 0));
     }
-    emojiTags.add(EmojiTag(name: '全部', count: emojis.length, isSelected: true));
+    emojiTags.add(EmojiTag(
+        name: AppText.allTagName, count: emojis.length, isSelected: true));
     emojiTags.sort((a, b) => -a.count.compareTo(b.count));
     return emojiTags;
   }

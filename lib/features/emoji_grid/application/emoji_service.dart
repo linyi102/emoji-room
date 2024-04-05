@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:emoji_room/constants/app_text.dart';
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
@@ -107,7 +108,8 @@ Future<List<Emoji>> filteredEmojiList(Ref ref) async {
   final selectedTags = ref.watch(selectedEmojiTagListProvider);
   return all.where((emoji) {
     for (final selectedTag in selectedTags) {
-      if (selectedTag.name != '全部' && !emoji.tags.contains(selectedTag.name)) {
+      if (selectedTag.name != AppText.allTagName &&
+          !emoji.tags.contains(selectedTag.name)) {
         return false;
       }
     }
