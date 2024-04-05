@@ -50,17 +50,19 @@ EmojiService emojiService(Ref ref) {
 class EmojiList extends _$EmojiList {
   @override
   FutureOr<List<Emoji>> build() {
-    final dirPath = ref.watch(emojiDirPathProvider);
-    if (dirPath == null || dirPath.isEmpty) return [];
-
-    return ref.watch(emojiRepositoryProvider).fetchEmojis(dirPath);
+    return ref.watch(emojiRepositoryProvider).fetchEmojis();
   }
 
   updateItem(Emoji newEmoji) {
+    ref.read(emojiRepositoryProvider).saveEmoji(newEmoji);
+
     final emojis = state.value ?? [];
     state = AsyncData([
       for (final emoji in emojis)
-        if (emoji.id == newEmoji.id) newEmoji else emoji
+        if (emoji.id == newEmoji.id)
+          newEmoji.copyWith(mTime: DateTime.now())
+        else
+          emoji
     ]);
   }
 }
