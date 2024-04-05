@@ -21,8 +21,7 @@ class EmojiRepository {
       ...(await _fetchDirEmojis(qqDirPath, mustBeImageSuffix: false))
         ..forEach((e) => e.tags.add('QQ'))
     ];
-    emojis.sort((a, b) =>
-        -a.file.statSync().modified.compareTo(b.file.statSync().modified));
+    emojis.sort((a, b) => -a.fmTime.compareTo(b.fmTime));
     return emojis;
   }
 
@@ -38,7 +37,7 @@ class EmojiRepository {
       bool isImage = FileUtil.isImage(fse.path);
 
       if (isFile && (isImage || !mustBeImageSuffix)) {
-        final fileEmoji = Emoji.fromFile(File(fse.path));
+        final fileEmoji = Emoji.fromFile(File(fse.path), stat);
         final emoji = await _mergeEmoji(fileEmoji);
         emojis.add(emoji);
       }

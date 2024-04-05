@@ -5,9 +5,13 @@ import 'package:path/path.dart' as p;
 
 class Emoji {
   final String id;
+
   final File file;
   final String fileName;
+  final DateTime fcTime;
+  final DateTime fmTime;
   final int size;
+
   final String title;
   final int usageCount;
   final bool ignore;
@@ -19,6 +23,8 @@ class Emoji {
     required this.id,
     required this.file,
     required this.fileName,
+    required this.fcTime,
+    required this.fmTime,
     required this.size,
     required this.title,
     required this.usageCount,
@@ -29,14 +35,16 @@ class Emoji {
     tags = title.isNotEmpty ? title.split(RegExp(r'\s+')) : [];
   }
 
-  factory Emoji.fromFile(File file) {
+  factory Emoji.fromFile(File file, FileStat stat) {
     final now = DateTime.now();
-    final size = file.statSync().size;
+    final size = stat.size;
 
     return Emoji(
       id: p.basenameWithoutExtension(file.path),
       file: file,
       fileName: p.basename(file.path),
+      fcTime: stat.changed,
+      fmTime: stat.modified,
       size: size,
       title: '',
       usageCount: 0,
@@ -54,6 +62,8 @@ class Emoji {
       id: _invaidId,
       file: File(''),
       fileName: '',
+      fcTime: DateTime(0),
+      fmTime: DateTime(0),
       size: 0,
       title: '',
       usageCount: 0,
@@ -67,6 +77,8 @@ class Emoji {
     String? id,
     File? file,
     String? fileName,
+    DateTime? fcTime,
+    DateTime? fmTime,
     int? size,
     String? title,
     int? usageCount,
@@ -78,6 +90,8 @@ class Emoji {
       id: id ?? this.id,
       file: file ?? this.file,
       fileName: fileName ?? this.fileName,
+      fcTime: fcTime ?? this.fcTime,
+      fmTime: fmTime ?? this.fmTime,
       size: size ?? this.size,
       title: title ?? this.title,
       usageCount: usageCount ?? this.usageCount,
@@ -91,6 +105,8 @@ class Emoji {
     return <String, dynamic>{
       'id': id,
       'fileName': fileName,
+      'fcTime': fcTime.millisecondsSinceEpoch,
+      'fmTime': fmTime.millisecondsSinceEpoch,
       'size': size,
       'title': title,
       'usageCount': usageCount,
@@ -102,15 +118,17 @@ class Emoji {
 
   factory Emoji.fromMap(Map<String, dynamic> map) {
     return Emoji(
-      id: map['id'] as String,
+      id: map['id'] as String? ?? _invaidId,
       file: File(''),
-      fileName: map['fileName'] as String,
-      size: map['size'] as int,
-      title: map['title'] as String,
-      usageCount: map['usageCount'] as int,
-      ignore: map['ignore'] as bool,
-      cTime: DateTime.fromMillisecondsSinceEpoch(map['cTime'] as int),
-      mTime: DateTime.fromMillisecondsSinceEpoch(map['mTime'] as int),
+      fileName: map['fileName'] as String? ?? '',
+      fcTime: DateTime.fromMillisecondsSinceEpoch(map['fcTime'] as int? ?? 0),
+      fmTime: DateTime.fromMillisecondsSinceEpoch(map['fmTime'] as int? ?? 0),
+      size: map['size'] as int? ?? 0,
+      title: map['title'] as String? ?? '',
+      usageCount: map['usageCount'] as int? ?? 0,
+      ignore: map['ignore'] as bool? ?? false,
+      cTime: DateTime.fromMillisecondsSinceEpoch(map['cTime'] as int? ?? 0),
+      mTime: DateTime.fromMillisecondsSinceEpoch(map['mTime'] as int? ?? 0),
     );
   }
 
@@ -121,7 +139,7 @@ class Emoji {
 
   @override
   String toString() {
-    return 'Emoji(file: $file, fileName: $fileName, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
+    return 'Emoji(file: $file, fileName: $fileName, fcTime: $fcTime, fmTime: $fmTime size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
   }
 
   @override
@@ -130,6 +148,8 @@ class Emoji {
 
     return other.file == file &&
         other.fileName == fileName &&
+        other.fcTime == fcTime &&
+        other.fmTime == fmTime &&
         other.size == size &&
         other.title == title &&
         other.usageCount == usageCount &&
@@ -142,6 +162,8 @@ class Emoji {
   int get hashCode {
     return file.hashCode ^
         fileName.hashCode ^
+        fcTime.hashCode ^
+        fmTime.hashCode ^
         size.hashCode ^
         title.hashCode ^
         usageCount.hashCode ^
