@@ -79,6 +79,6 @@ class EmojiSearchController extends _$EmojiSearchController {
 
   void clearKeyword() {
     state.keywordTec.clear();
-    state = state.copyWith();
+    state = state.copyWith(keyword: '');
   }
 }

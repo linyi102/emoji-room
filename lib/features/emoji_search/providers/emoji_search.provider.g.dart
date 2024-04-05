@@ -7,7 +7,7 @@ part of 'emoji_search.provider.dart';
 // **************************************************************************
 
 String _$emojiSearchControllerHash() =>
-    r'd9fe8e9307a38a7ffb7ca3aeae1bb1f430bd5c35';
+    r'333a3b3887c75d0139844297254fb93f59129ebb';
 
 /// See also [EmojiSearchController].
 @ProviderFor(EmojiSearchController)
