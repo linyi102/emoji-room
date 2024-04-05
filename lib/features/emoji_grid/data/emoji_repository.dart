@@ -57,7 +57,11 @@ class EmojiRepository {
       return emoji;
     }
     final recordEmoji = Emoji.fromJson(json);
-    return recordEmoji.copyWith(file: emoji.file);
+    return recordEmoji.copyWith(
+      file: emoji.file,
+      fcTime: emoji.fcTime,
+      fmTime: emoji.fmTime,
+    );
   }
 
   Future<bool> saveEmoji(Emoji emoji) async {
