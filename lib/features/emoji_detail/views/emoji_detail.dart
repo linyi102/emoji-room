@@ -20,30 +20,29 @@ class EmojiDetailView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emoji = ref.watch(currentEmojiProvider(emojiId));
-    return Scaffold(
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildImage(emoji),
+          const GapH(8),
+          _buildTitle(emoji, context),
+          const GapH(2),
+          _buildSize(emoji, context),
+          const GapH(40),
+          Align(
+              alignment: Alignment.center,
+              child: _buildUsageCount(emoji, context)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildImage(emoji),
-              const GapH(8),
-              _buildTitle(emoji, context),
-              const GapH(2),
-              _buildSize(emoji, context),
-              const GapH(2),
+              _buildShareBottomButton(emoji, context, ref),
             ],
           ),
-        ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Align(
-                alignment: Alignment.center,
-                child: _buildUsageCount(emoji, context)),
-            _buildShareBottomButton(emoji, context, ref),
-          ],
-        ));
+        ],
+      ),
+    );
   }
 
   Align _buildImage(Emoji emoji) {
@@ -99,13 +98,21 @@ class EmojiDetailView extends ConsumerWidget {
   Padding _buildShareBottomButton(
       Emoji emoji, BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: SizedBox(
         height: 45,
         child: ElevatedButton(
+            style: ButtonStyle(
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100),
+              )),
+              backgroundColor:
+                  MaterialStatePropertyAll(Theme.of(context).primaryColor),
+              foregroundColor: const MaterialStatePropertyAll(Colors.white),
+            ),
             onPressed: () {
               ref.read(emojiServiceProvider).shareEmoji(emoji);
-              // Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: Text(Platform.isAndroid ? '分享' : '复制')),
       ),
