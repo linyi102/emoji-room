@@ -1,3 +1,1 @@
-class AppText {
-  static const allTagName = '全部';
-}
+class AppText {}

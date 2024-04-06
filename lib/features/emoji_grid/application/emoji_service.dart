@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:emoji_room/constants/app_text.dart';
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
@@ -115,7 +114,7 @@ Future<List<Emoji>> filteredEmojiList(Ref ref) async {
   return all.where((emoji) {
     // 该表情的标签列表是否有筛选的标签
     for (final tag in selectedTags) {
-      if (tag.name != AppText.allTagName && !emoji.tags.contains(tag.name)) {
+      if (!emoji.tags.contains(tag.name)) {
         return false;
       }
     }

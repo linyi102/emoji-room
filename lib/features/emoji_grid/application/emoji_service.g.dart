@@ -20,7 +20,7 @@ final emojiServiceProvider = Provider<EmojiService>.internal(
 );
 
 typedef EmojiServiceRef = ProviderRef<EmojiService>;
-String _$filteredEmojiListHash() => r'e0d9a7d1d4e757904de70ec533232ec5c2069f1e';
+String _$filteredEmojiListHash() => r'1138ddbd9c6a8b1e35e395919e5c0718a9f56d1c';
 
 /// See also [filteredEmojiList].
 @ProviderFor(filteredEmojiList)
