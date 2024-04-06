@@ -3,6 +3,7 @@ import 'package:emoji_room/features/emoji_dir/views/emoji_dir_tile.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/persentation/emoji_grid_view.dart';
 import 'package:emoji_room/features/emoji_search/views/emoji_search_appbar.dart';
+import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tags_view.dart';
 import 'package:emoji_room/providers/theme.dart';
 import 'package:emoji_room/widgets/bottom_sheet.dart';
@@ -26,6 +27,14 @@ class HomePage extends ConsumerWidget {
         actions: [
           IconButton(
               onPressed: () {
+                showCommonModalBottomSheet(
+                  context: context,
+                  builder: (context) => EmojiTagsView(emojiTagListProvider),
+                );
+              },
+              icon: const Icon(Icons.tag)),
+          IconButton(
+              onPressed: () {
                 _showSettingBottomSheet(context);
               },
               icon: const Icon(Icons.settings)),
@@ -39,11 +48,11 @@ class HomePage extends ConsumerWidget {
       ),
       body: !hasSelectMainDir
           ? const EmojiDirTile()
-          : const Column(
+          : Column(
               children: [
-                EmojiSearchAppBar(),
-                EmojiTagsView(),
-                Expanded(child: EmojiGridView()),
+                const EmojiSearchAppBar(),
+                EmojiTagsView(selectedEmojiTagListProvider),
+                const Expanded(child: EmojiGridView()),
               ],
             ),
     );
