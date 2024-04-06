@@ -6,6 +6,7 @@ import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
+import 'package:emoji_room/utils/build_mode.dart';
 import 'package:emoji_room/utils/permission.dart';
 import 'package:emoji_room/utils/string.dart';
 import 'package:emoji_room/utils/toast.dart';
@@ -74,6 +75,7 @@ class EmojiService {
       ToastUtil.showText('已复制到剪切板');
     }
 
+    if (BuildMode.isDebug) return;
     final newEmoji = emoji.copyWith(usageCount: emoji.usageCount + 1);
     ref.read(emojiListProvider.notifier).updateItem(newEmoji);
   }
