@@ -17,6 +17,10 @@ class Config {
   static const isDarkKey = 'isDark';
   bool getIsDark() => box.get(isDarkKey, defaultValue: false);
   Future<void> setIsDark(bool isDark) => box.put(isDarkKey, isDark);
+
+  static const scanQQKey = 'scanQQ';
+  bool getScanQQ() => box.get(scanQQKey, defaultValue: false);
+  Future<void> setScanQQ(bool scan) => box.put(scanQQKey, scan);
 }
 
 @Riverpod(keepAlive: true)

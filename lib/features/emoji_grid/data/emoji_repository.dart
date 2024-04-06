@@ -14,13 +14,14 @@ class EmojiRepository {
   final String mainDirPath;
   EmojiRepository({required this.mainDirPath});
 
-  Future<List<Emoji>> fetchEmojis() async {
+  Future<List<Emoji>> fetchEmojis(bool scanQQ) async {
     const qqDirPath = '/storage/emulated/0/tencent/QQ_Favorite/';
     List<Emoji> emojis = [
       ...await _fetchDirEmojis(mainDirPath)
         ..forEach((e) => e.tags.add('主目录')),
-      ...(await _fetchDirEmojis(qqDirPath, mustBeImageSuffix: false))
-        ..forEach((e) => e.tags.add('QQ'))
+      if (scanQQ)
+        ...(await _fetchDirEmojis(qqDirPath, mustBeImageSuffix: false))
+          ..forEach((e) => e.tags.add('QQ'))
     ];
     emojis.sort((a, b) => -a.fmTime.compareTo(b.fmTime));
     return emojis;

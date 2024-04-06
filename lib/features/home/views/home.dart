@@ -1,5 +1,6 @@
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_dir/views/emoji_dir_tile.dart';
+import 'package:emoji_room/features/emoji_dir/views/scan_qq_tile.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/persentation/emoji_grid_view.dart';
 import 'package:emoji_room/features/emoji_search/views/emoji_search_appbar.dart';
@@ -35,7 +36,7 @@ class HomePage extends ConsumerWidget {
               icon: const Icon(Icons.tag)),
           IconButton(
               onPressed: () {
-                _showSettingBottomSheet(context);
+                _showSettingBottomSheet(context, ref);
               },
               icon: const Icon(Icons.settings)),
           IconButton(
@@ -58,7 +59,7 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  Future<dynamic> _showSettingBottomSheet(BuildContext context) {
+  Future<dynamic> _showSettingBottomSheet(BuildContext context, WidgetRef ref) {
     return showCommonModalBottomSheet(
       context: context,
       builder: (context) => Scaffold(
@@ -70,6 +71,7 @@ class HomePage extends ConsumerWidget {
           child: Column(
             children: [
               EmojiDirTile(),
+              ScanQQTile(),
             ],
           ),
         ),

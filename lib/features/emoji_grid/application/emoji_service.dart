@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
+import 'package:emoji_room/features/emoji_dir/providers/scan_qq.provider.dart';
 import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
@@ -26,7 +27,8 @@ class EmojiService {
       return [];
     }
 
-    return ref.watch(emojiRepositoryProvider).fetchEmojis();
+    final scanQQ = ref.watch(scanQQProvider);
+    return ref.watch(emojiRepositoryProvider).fetchEmojis(scanQQ);
   }
 
   Future<bool> tryRequestManageExternalStorage() async {
@@ -85,7 +87,7 @@ EmojiService emojiService(Ref ref) {
 @Riverpod(keepAlive: true)
 class EmojiList extends _$EmojiList {
   @override
-  FutureOr<List<Emoji>> build() {
+  Future<List<Emoji>> build() {
     return ref.watch(emojiServiceProvider).fetchEmojis();
   }
 
