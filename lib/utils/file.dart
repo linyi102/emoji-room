@@ -2,8 +2,8 @@ import 'package:path/path.dart' as p;
 
 class FileUtil {
   static isImage(String fileName) {
-    return ['.jpg', '.jpeg', 'gif', '.png', '.webp']
-        .contains(p.extension(fileName));
+    return ['.jpg', '.jpeg', '.png', '.webp', '.gif']
+        .contains(p.extension(fileName).toLowerCase());
   }
 
   static String getReadableFileSize(int size) {
