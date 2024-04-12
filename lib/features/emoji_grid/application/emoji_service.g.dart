@@ -20,22 +20,21 @@ final emojiServiceProvider = Provider<EmojiService>.internal(
 );
 
 typedef EmojiServiceRef = ProviderRef<EmojiService>;
-String _$filteredEmojiListHash() => r'1138ddbd9c6a8b1e35e395919e5c0718a9f56d1c';
+String _$searchKeywordsHash() => r'dbc44e886a11767d3244c671ed1d8620ad4d5fd6';
 
-/// See also [filteredEmojiList].
-@ProviderFor(filteredEmojiList)
-final filteredEmojiListProvider =
-    AutoDisposeFutureProvider<List<Emoji>>.internal(
-  filteredEmojiList,
-  name: r'filteredEmojiListProvider',
+/// See also [searchKeywords].
+@ProviderFor(searchKeywords)
+final searchKeywordsProvider = Provider<List<String>>.internal(
+  searchKeywords,
+  name: r'searchKeywordsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$filteredEmojiListHash,
+      : _$searchKeywordsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef FilteredEmojiListRef = AutoDisposeFutureProviderRef<List<Emoji>>;
+typedef SearchKeywordsRef = ProviderRef<List<String>>;
 String _$emojiTotalHash() => r'7cd3c0777017076c09071eabfb376a847fd69ca8';
 
 /// See also [emojiTotal].
@@ -50,7 +49,7 @@ final emojiTotalProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef EmojiTotalRef = AutoDisposeProviderRef<int>;
-String _$emojiListHash() => r'633f6f88b2b6a3534e8387ff03f7a663ce280832';
+String _$emojiListHash() => r'17bc1f0767db5162257405f53b907a9461ff48ca';
 
 /// See also [EmojiList].
 @ProviderFor(EmojiList)

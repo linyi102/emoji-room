@@ -23,13 +23,23 @@ class EmojiService {
   final Ref ref;
   EmojiService(this.ref);
 
-  Future<List<Emoji>> fetchEmojis() async {
+  Future<List<Emoji>> fetchEmojis({
+    bool cache = true,
+    List<String> keywords = const [],
+  }) async {
     if (!await tryRequestManageExternalStorage()) {
       return [];
     }
 
     final scanQQ = ref.watch(scanQQProvider);
-    return ref.watch(emojiRepositoryProvider).fetchEmojis(scanQQ);
+    final emojis = ref.watch(emojiRepositoryProvider).fetchEmojis(
+          cache: cache,
+          scanQQ: scanQQ,
+          keywords: keywords,
+        );
+    // EmojiList依赖searchKeywords依赖EmojiTagList，如果此处进行重新加载EmojiTagList，回车后生成searchKeywords，然后重新生成EmojiList，从而此处再次重新加载EmojiTagList，导致循环依赖
+    // ref.invalidate(emojiTagListProvider);
+    return emojis;
   }
 
   Future<bool> tryRequestManageExternalStorage() async {
@@ -75,7 +85,6 @@ class EmojiService {
       ToastUtil.showText('已复制到剪切板');
     }
 
-    if (BuildMode.isDebug) return;
     final newEmoji = emoji.copyWith(usageCount: emoji.usageCount + 1);
     ref.read(emojiListProvider.notifier).updateItem(newEmoji);
   }
@@ -88,13 +97,31 @@ EmojiService emojiService(Ref ref) {
 
 @Riverpod(keepAlive: true)
 class EmojiList extends _$EmojiList {
+  bool cache = false;
+
   @override
   Future<List<Emoji>> build() {
-    return ref.watch(emojiServiceProvider).fetchEmojis();
+    final service = ref.watch(emojiServiceProvider);
+    final keywords = ref.watch(searchKeywordsProvider);
+    final emojis = service.fetchEmojis(
+      keywords: keywords,
+      cache: cache,
+    );
+
+    cache = true;
+    return emojis;
+  }
+
+  Future<List<Emoji>> refresh() {
+    cache = false;
+    final res = ref.refresh(emojiListProvider.future);
+    return res;
   }
 
   updateItem(Emoji newEmoji) {
-    ref.read(emojiRepositoryProvider).saveEmoji(newEmoji);
+    if (BuildMode.isRelease) {
+      ref.read(emojiRepositoryProvider).saveEmoji(newEmoji);
+    }
 
     final emojis = state.value ?? [];
     state = AsyncData([
@@ -107,31 +134,16 @@ class EmojiList extends _$EmojiList {
   }
 }
 
-@riverpod
-Future<List<Emoji>> filteredEmojiList(Ref ref) async {
-  final all = ref.watch(emojiListProvider).value ?? [];
+@Riverpod(keepAlive: true)
+List<String> searchKeywords(Ref ref) {
   final selectedTags = ref.watch(selectedEmojiTagListProvider);
   final searchKeyword =
       ref.watch(emojiSearchControllerProvider.select((value) => value.keyword));
 
-  List<String> searchKeywords = StringUtil.splitKeywords(searchKeyword);
-  return all.where((emoji) {
-    // 该表情的标签列表是否有筛选的标签
-    for (final tag in selectedTags) {
-      if (!emoji.tags.contains(tag.name)) {
-        return false;
-      }
-    }
-    // 该表情的标题是否有关键字
-    // 示例：搜索"a bc"时，查看是否有a并且有bc文本
-    for (final keyword in searchKeywords) {
-      if (!emoji.title.toLowerCase().contains(keyword.toLowerCase())) {
-        return false;
-      }
-    }
-
-    return true;
-  }).toList();
+  return [
+    ...selectedTags.map((e) => e.name),
+    ...StringUtil.splitKeywords(searchKeyword)
+  ];
 }
 
 @riverpod
