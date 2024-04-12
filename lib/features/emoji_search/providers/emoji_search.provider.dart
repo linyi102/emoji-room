@@ -3,12 +3,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'emoji_search.provider.g.dart';
 
-class EmojiSearchModel {
+class EmojiSearchState {
   final String keyword;
   final TextEditingController keywordTec;
   final FocusNode focusNode;
   final bool hasFocus;
-  EmojiSearchModel({
+  EmojiSearchState({
     this.keyword = '',
     required this.keywordTec,
     required this.focusNode,
@@ -20,13 +20,13 @@ class EmojiSearchModel {
     focusNode.dispose();
   }
 
-  EmojiSearchModel copyWith({
+  EmojiSearchState copyWith({
     String? keyword,
     TextEditingController? keywordTec,
     FocusNode? focusNode,
     bool? hasFocus,
   }) {
-    return EmojiSearchModel(
+    return EmojiSearchState(
       keyword: keyword ?? this.keyword,
       keywordTec: keywordTec ?? this.keywordTec,
       focusNode: focusNode ?? this.focusNode,
@@ -35,7 +35,7 @@ class EmojiSearchModel {
   }
 
   @override
-  bool operator ==(covariant EmojiSearchModel other) {
+  bool operator ==(covariant EmojiSearchState other) {
     if (identical(this, other)) return true;
 
     return other.keyword == keyword &&
@@ -56,8 +56,8 @@ class EmojiSearchModel {
 @Riverpod(keepAlive: true)
 class EmojiSearchController extends _$EmojiSearchController {
   @override
-  EmojiSearchModel build() {
-    final model = EmojiSearchModel(
+  EmojiSearchState build() {
+    final model = EmojiSearchState(
         keywordTec: TextEditingController(), focusNode: FocusNode());
     ref.onDispose(() {
       model.focusNode.removeListener(focusNodeListener);

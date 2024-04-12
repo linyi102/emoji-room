@@ -7,12 +7,12 @@ part of 'emoji_search.provider.dart';
 // **************************************************************************
 
 String _$emojiSearchControllerHash() =>
-    r'9e860015ff6652dc07867e151da339b77453fe21';
+    r'a606ce788f18c457058890ae4e6459234fa713b1';
 
 /// See also [EmojiSearchController].
 @ProviderFor(EmojiSearchController)
 final emojiSearchControllerProvider =
-    NotifierProvider<EmojiSearchController, EmojiSearchModel>.internal(
+    NotifierProvider<EmojiSearchController, EmojiSearchState>.internal(
   EmojiSearchController.new,
   name: r'emojiSearchControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final emojiSearchControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$EmojiSearchController = Notifier<EmojiSearchModel>;
+typedef _$EmojiSearchController = Notifier<EmojiSearchState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

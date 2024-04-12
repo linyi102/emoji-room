@@ -25,8 +25,16 @@ class HomePage extends ConsumerWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        if (ref.read(emojiSearchControllerProvider).hasFocus) {
+        final emojiSearchState = ref.read(emojiSearchControllerProvider);
+        final emojiSelectedTags = ref.read(selectedEmojiTagListProvider);
+
+        if (emojiSearchState.hasFocus) {
           KeyBoardControl.cancelKeyBoard(context);
+          return false;
+        } else if (emojiSearchState.keyword.isNotEmpty ||
+            emojiSelectedTags.isNotEmpty) {
+          ref.read(emojiSearchControllerProvider.notifier).clearKeyword();
+          ref.read(selectedEmojiTagListProvider.notifier).clearSelectedTags();
           return false;
         } else {
           return true;
