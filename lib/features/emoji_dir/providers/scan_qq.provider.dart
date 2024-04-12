@@ -1,3 +1,4 @@
+import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/providers/config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,5 +15,6 @@ class ScanQQ extends _$ScanQQ {
   void toggle() {
     state = !state;
     ref.read(configProvider).setScanQQ(state);
+    ref.read(emojiListProvider.notifier).refresh();
   }
 }

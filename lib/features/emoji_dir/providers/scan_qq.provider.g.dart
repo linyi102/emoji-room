@@ -6,7 +6,7 @@ part of 'scan_qq.provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$scanQQHash() => r'd804053f1798b999b956aa8ad55a0e29348b1494';
+String _$scanQQHash() => r'c18c09be375db838255a3e60b798f3a9dbcc02d8';
 
 /// See also [ScanQQ].
 @ProviderFor(ScanQQ)
