@@ -21,9 +21,9 @@ class SelectedEmojiTagList extends _$SelectedEmojiTagList {
 
   void toggleTag(EmojiTag tag) {
     if (hasSelected(tag)) {
-      removeSelectTag(tag);
+      remove(tag);
     } else {
-      selectTag(tag);
+      select(tag);
     }
   }
 
@@ -31,7 +31,7 @@ class SelectedEmojiTagList extends _$SelectedEmojiTagList {
     return state.indexWhere((e) => e.name == tag.name) >= 0;
   }
 
-  void selectTag(EmojiTag tag, {bool single = true}) {
+  void select(EmojiTag tag, {bool single = true}) {
     if (single) {
       state = [tag];
     } else {
@@ -39,7 +39,11 @@ class SelectedEmojiTagList extends _$SelectedEmojiTagList {
     }
   }
 
-  void removeSelectTag(EmojiTag tag) {
+  void remove(EmojiTag tag) {
     state = state.where((e) => e.name != tag.name).toList();
+  }
+
+  void clearSelectedTags() {
+    state = [];
   }
 }

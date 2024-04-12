@@ -5,8 +5,8 @@ import 'package:emoji_room/features/emoji_tags/views/emoji_tag_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EmojiTagsView extends ConsumerWidget {
-  const EmojiTagsView(this.providerListenable, {super.key});
+class EmojiTagsWrapView extends ConsumerWidget {
+  const EmojiTagsWrapView(this.providerListenable, {super.key});
   final ProviderListenable<List<EmojiTag>> providerListenable;
 
   @override
@@ -26,7 +26,7 @@ class EmojiTagsView extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 3),
                 child: GestureDetector(
-                  onTap: () => toggleSelectTag(tag, ref),
+                  onTap: () => toggleSelectTag(ref, tag),
                   onLongPress: () => multiSelectTag(ref, tag),
                   child: EmojiTagChip(
                     tag,
@@ -46,11 +46,11 @@ class EmojiTagsView extends ConsumerWidget {
   void multiSelectTag(WidgetRef ref, EmojiTag emojiTag) {
     ref
         .read(selectedEmojiTagListProvider.notifier)
-        .selectTag(emojiTag, single: false);
+        .select(emojiTag, single: false);
   }
 
   /// 单选或取消
-  void toggleSelectTag(EmojiTag emojiTag, WidgetRef ref) {
+  void toggleSelectTag(WidgetRef ref, EmojiTag emojiTag) {
     ref.read(selectedEmojiTagListProvider.notifier).toggleTag(emojiTag);
   }
 }

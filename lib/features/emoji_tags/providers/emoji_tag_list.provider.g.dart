@@ -22,7 +22,7 @@ final emojiTagListProvider =
 
 typedef _$EmojiTagList = AutoDisposeNotifier<List<EmojiTag>>;
 String _$selectedEmojiTagListHash() =>
-    r'60543e69cf2d63e5294fd5a693905dc608a758c9';
+    r'b3ccb504c3009c0ffbc8b62907ca5aca2d4a3b51';
 
 /// See also [SelectedEmojiTagList].
 @ProviderFor(SelectedEmojiTagList)

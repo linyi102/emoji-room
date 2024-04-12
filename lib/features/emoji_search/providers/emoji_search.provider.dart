@@ -67,7 +67,7 @@ class EmojiSearchController extends _$EmojiSearchController {
     return model;
   }
 
-  focusNodeListener() {
+  void focusNodeListener() {
     if (state.hasFocus != state.focusNode.hasFocus) {
       state = state.copyWith(hasFocus: state.focusNode.hasFocus);
     }
