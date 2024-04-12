@@ -37,13 +37,7 @@ class HomePage extends ConsumerWidget {
           title: Text('表情包 ${emojiTotal == 0 ? '' : emojiTotal}'),
           actions: [
             IconButton(
-                onPressed: () {
-                  showCommonModalBottomSheet(
-                    context: context,
-                    builder: (context) =>
-                        EmojiTagsListView(emojiTagListProvider),
-                  );
-                },
+                onPressed: () => _showAllTagView(context, ref),
                 icon: const Icon(Icons.tag)),
             IconButton(
                 onPressed: () {
@@ -64,6 +58,19 @@ class HomePage extends ConsumerWidget {
                   const Expanded(child: EmojiGridView()),
                 ],
               ),
+      ),
+    );
+  }
+
+  Future<dynamic> _showAllTagView(BuildContext context, WidgetRef ref) {
+    return showCommonModalBottomSheet(
+      context: context,
+      builder: (context) => Scaffold(
+        appBar: AppBar(
+          title: Text('标签 ${ref.read(emojiTagListProvider).length}'),
+          automaticallyImplyLeading: false,
+        ),
+        body: EmojiTagsListView(emojiTagListProvider),
       ),
     );
   }

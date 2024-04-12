@@ -13,6 +13,8 @@ class EmojiTagsListView extends ConsumerStatefulWidget {
 }
 
 class _EmojiTagsListViewState extends ConsumerState<EmojiTagsListView> {
+  bool get dense => false;
+
   @override
   Widget build(BuildContext context) {
     final emojiTagList = ref.watch(widget.providerListenable);
@@ -26,17 +28,17 @@ class _EmojiTagsListViewState extends ConsumerState<EmojiTagsListView> {
         final selected =
             selectedEmojiTagList.indexWhere((e) => e.name == tag.name) >= 0;
         return ListTile(
-          dense: true,
+          dense: dense,
           title: Text(tag.name),
           leading: selected
               ? Icon(
                   Icons.radio_button_checked,
                   color: Theme.of(context).primaryColor,
-                  size: 20,
+                  size: dense ? 20 : null,
                 )
-              : const Icon(
+              : Icon(
                   Icons.radio_button_off,
-                  size: 20,
+                  size: dense ? 20 : null,
                 ),
           trailing: Text(tag.count.toString()),
           onTap: () => toggleSelectTag(ref, tag),
