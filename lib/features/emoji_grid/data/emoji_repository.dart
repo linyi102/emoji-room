@@ -76,7 +76,7 @@ class EmojiRepository {
         final tagHit = emoji.tags.contains(keyword);
         final titleHit =
             emoji.title.toLowerCase().contains(keyword.toLowerCase());
-        if (!tagHit || !titleHit) return false;
+        if (!tagHit && !titleHit) return false;
       }
       return true;
     }).toList();
