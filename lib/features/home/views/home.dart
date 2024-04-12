@@ -24,22 +24,7 @@ class HomePage extends ConsumerWidget {
     bool hasSelectMainDir = emojiDirPath != null && emojiDirPath.isNotEmpty;
 
     return WillPopScope(
-      onWillPop: () async {
-        final emojiSearchState = ref.read(emojiSearchControllerProvider);
-        final emojiSelectedTags = ref.read(selectedEmojiTagListProvider);
-
-        if (emojiSearchState.hasFocus) {
-          KeyBoardControl.cancelKeyBoard(context);
-          return false;
-        } else if (emojiSearchState.keyword.isNotEmpty ||
-            emojiSelectedTags.isNotEmpty) {
-          ref.read(emojiSearchControllerProvider.notifier).clearKeyword();
-          ref.read(selectedEmojiTagListProvider.notifier).clearSelectedTags();
-          return false;
-        } else {
-          return true;
-        }
-      },
+      onWillPop: () async => clearInputFocusAndSearchKeyword(ref, context),
       child: Scaffold(
         appBar: AppBar(
           title: Text('表情包 ${emojiTotal == 0 ? '' : emojiTotal}'),
@@ -68,6 +53,27 @@ class HomePage extends ConsumerWidget {
               ),
       ),
     );
+  }
+
+  bool clearInputFocusAndSearchKeyword(WidgetRef ref, BuildContext context) {
+    final emojiSearchState = ref.read(emojiSearchControllerProvider);
+    final emojiSelectedTags = ref.read(selectedEmojiTagListProvider);
+
+    bool back = true;
+    if (emojiSearchState.hasFocus) {
+      back = false;
+      KeyBoardControl.cancelKeyBoard(context);
+    }
+    if (emojiSearchState.keyword.isNotEmpty) {
+      back = false;
+      ref.read(emojiSearchControllerProvider.notifier).clearKeyword();
+    }
+    if (emojiSelectedTags.isNotEmpty) {
+      back = false;
+      ref.read(selectedEmojiTagListProvider.notifier).clearSelectedTags();
+    }
+
+    return back;
   }
 
   Future<dynamic> _showAllTagView(BuildContext context, WidgetRef ref) {
