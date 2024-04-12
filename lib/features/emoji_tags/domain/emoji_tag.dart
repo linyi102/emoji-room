@@ -3,11 +3,9 @@ import 'dart:convert';
 class EmojiTag {
   final String name;
   final int count;
-  final bool isSelected;
   EmojiTag({
     required this.name,
     required this.count,
-    this.isSelected = false,
   });
 
   EmojiTag copyWith({
@@ -18,7 +16,6 @@ class EmojiTag {
     return EmojiTag(
       name: name ?? this.name,
       count: count ?? this.count,
-      isSelected: isSelected ?? this.isSelected,
     );
   }
 
@@ -26,7 +23,6 @@ class EmojiTag {
     return <String, dynamic>{
       'name': name,
       'count': count,
-      'isSelected': isSelected,
     };
   }
 
@@ -34,7 +30,6 @@ class EmojiTag {
     return EmojiTag(
       name: map['name'] as String,
       count: map['count'] as int,
-      isSelected: map['isSelected'] as bool,
     );
   }
 
@@ -44,18 +39,15 @@ class EmojiTag {
       EmojiTag.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'EmojiTag(name: $name, count: $count, isSelected: $isSelected)';
+  String toString() => 'EmojiTag(name: $name, count: $count)';
 
   @override
   bool operator ==(covariant EmojiTag other) {
     if (identical(this, other)) return true;
 
-    return other.name == name &&
-        other.count == count &&
-        other.isSelected == isSelected;
+    return other.name == name && other.count == count;
   }
 
   @override
-  int get hashCode => name.hashCode ^ count.hashCode ^ isSelected.hashCode;
+  int get hashCode => name.hashCode ^ count.hashCode;
 }

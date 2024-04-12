@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_tags/domain/emoji_tag.dart';
+import 'package:emoji_room/utils/build_mode.dart';
 import 'package:emoji_room/utils/file.dart';
 import 'package:emoji_room/utils/log.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,6 @@ class EmojiRepository {
   EmojiRepository({required this.mainDirPath});
 
   List<Emoji> cachedEmojis = [];
-  List<EmojiTag> cachedEmojiTags = [];
   bool hasCached = false;
 
   Future<List<Emoji>> fetchEmojis({
@@ -39,14 +39,13 @@ class EmojiRepository {
     emojis.sort((a, b) => -a.fmTime.compareTo(b.fmTime));
 
     cachedEmojis = [...emojis];
-    cachedEmojiTags = _collectEmojiTags(emojis);
     hasCached = true;
 
     return filterEmoji(emojis, keywords);
   }
 
   List<EmojiTag> fetchEmojiTags() {
-    return [...cachedEmojiTags];
+    return _collectEmojiTags(cachedEmojis);
   }
 
   Future<bool> saveEmoji(Emoji newEmoji) async {
@@ -55,6 +54,7 @@ class EmojiRepository {
     final index = cachedEmojis.indexWhere((e) => e.id == newEmoji.id);
     cachedEmojis[index] = newEmoji;
 
+    if (BuildMode.isDebug) return true;
     File recordFile = _getEmojiRecordFile(newEmoji);
     try {
       if (!await recordFile.exists()) await recordFile.create(recursive: true);

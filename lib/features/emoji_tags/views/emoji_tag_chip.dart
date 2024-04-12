@@ -6,8 +6,10 @@ class EmojiTagChip extends StatelessWidget {
   const EmojiTagChip(
     this.emojiTag, {
     super.key,
+    this.selected = false,
   });
   final EmojiTag emojiTag;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +29,10 @@ class EmojiTagChip extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6),
       ),
-      side: emojiTag.isSelected
+      side: selected
           ? BorderSide(color: Theme.of(context).colorScheme.primary)
           : const BorderSide(style: BorderStyle.none),
-      labelStyle: emojiTag.isSelected
+      labelStyle: selected
           ? TextStyle(
               fontWeight: FontWeight.bold,
               color: Theme.of(context).colorScheme.onPrimaryContainer)

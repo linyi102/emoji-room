@@ -12,6 +12,7 @@ class EmojiTagsView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emojiTagList = ref.watch(providerListenable);
+    final selectedEmojiTagList = ref.watch(selectedEmojiTagListProvider);
     if (emojiTagList.isEmpty) return const SizedBox();
 
     return SingleChildScrollView(
@@ -21,13 +22,18 @@ class EmojiTagsView extends ConsumerWidget {
         child: Wrap(
           runSpacing: AppTheme.wrapRunSpacing,
           children: [
-            for (final emojiTag in emojiTagList)
+            for (final tag in emojiTagList)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 3),
                 child: GestureDetector(
-                  onTap: () => toggleSelectTag(emojiTag, ref),
-                  onLongPress: () => multiSelectTag(ref, emojiTag),
-                  child: EmojiTagChip(emojiTag),
+                  onTap: () => toggleSelectTag(tag, ref),
+                  onLongPress: () => multiSelectTag(ref, tag),
+                  child: EmojiTagChip(
+                    tag,
+                    selected: selectedEmojiTagList
+                            .indexWhere((e) => e.name == tag.name) >=
+                        0,
+                  ),
                 ),
               )
           ],
@@ -38,15 +44,13 @@ class EmojiTagsView extends ConsumerWidget {
 
   /// 多选
   void multiSelectTag(WidgetRef ref, EmojiTag emojiTag) {
-    ref.read(emojiTagListProvider.notifier).selectTag(emojiTag, single: false);
+    ref
+        .read(selectedEmojiTagListProvider.notifier)
+        .selectTag(emojiTag, single: false);
   }
 
   /// 单选或取消
   void toggleSelectTag(EmojiTag emojiTag, WidgetRef ref) {
-    if (!emojiTag.isSelected) {
-      ref.read(emojiTagListProvider.notifier).selectTag(emojiTag);
-    } else {
-      ref.read(emojiTagListProvider.notifier).removeSelectTag(emojiTag);
-    }
+    ref.read(selectedEmojiTagListProvider.notifier).toggleTag(emojiTag);
   }
 }

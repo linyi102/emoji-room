@@ -6,7 +6,6 @@ import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
-import 'package:emoji_room/utils/build_mode.dart';
 import 'package:emoji_room/utils/permission.dart';
 import 'package:emoji_room/utils/string.dart';
 import 'package:emoji_room/utils/toast.dart';
@@ -37,8 +36,6 @@ class EmojiService {
           scanQQ: scanQQ,
           keywords: keywords,
         );
-    // EmojiList依赖searchKeywords依赖EmojiTagList，如果此处进行重新加载EmojiTagList，回车后生成searchKeywords，然后重新生成EmojiList，从而此处再次重新加载EmojiTagList，导致循环依赖
-    // ref.invalidate(emojiTagListProvider);
     return emojis;
   }
 
@@ -119,9 +116,7 @@ class EmojiList extends _$EmojiList {
   }
 
   updateItem(Emoji newEmoji) {
-    if (BuildMode.isRelease) {
-      ref.read(emojiRepositoryProvider).saveEmoji(newEmoji);
-    }
+    ref.read(emojiRepositoryProvider).saveEmoji(newEmoji);
 
     final emojis = state.value ?? [];
     state = AsyncData([
