@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:emoji_room/constants/app_theme.dart';
 import 'package:emoji_room/features/emoji_detail/views/emoji_detail.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
@@ -40,7 +41,7 @@ class EmojiGridItem extends ConsumerWidget {
         ),
       );
     } else {
-      return showDialog(
+      return showModal(
         context: context,
         builder: (context) => AlertDialog(content: EmojiDetailView(emoji.id)),
       );
