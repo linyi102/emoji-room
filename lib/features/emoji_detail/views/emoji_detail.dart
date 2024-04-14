@@ -20,29 +20,25 @@ class EmojiDetailView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emoji = ref.watch(currentEmojiProvider(emojiId));
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          EmojiDetailImage(emoji),
-          const GapH(8),
-          _buildTitle(emoji, context),
-          const GapH(2),
-          _buildSize(emoji, context),
-          const GapH(40),
-          Align(
-              alignment: Alignment.center,
-              child: _buildUsageCount(emoji, context)),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildShareBottomButton(emoji, context, ref),
-            ],
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        EmojiDetailImage(emoji),
+        const GapH(8),
+        _buildTitle(emoji, context),
+        const GapH(2),
+        _buildSize(emoji, context),
+        const GapH(20),
+        Align(
+            alignment: Alignment.center,
+            child: _buildUsageCount(emoji, context)),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildShareBottomButton(emoji, context, ref),
+          ],
+        ),
+      ],
     );
   }
 
@@ -71,7 +67,7 @@ class EmojiDetailView extends ConsumerWidget {
 
   Text _buildUsageCount(Emoji emoji, BuildContext context) {
     return Text(
-      '共分享了 ${emoji.usageCount} 次',
+      '已分享 ${emoji.usageCount} 次',
       style: Theme.of(context)
           .textTheme
           .bodySmall
@@ -84,7 +80,7 @@ class EmojiDetailView extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: SizedBox(
-        height: 45,
+        height: 40,
         child: ElevatedButton(
             style: ButtonStyle(
               shape: MaterialStatePropertyAll(RoundedRectangleBorder(

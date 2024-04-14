@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class EmojiGridItem extends ConsumerWidget {
   const EmojiGridItem(this.emoji, {super.key});
   final Emoji emoji;
+  bool get useBottomSheetStyle => false;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +35,20 @@ class EmojiGridItem extends ConsumerWidget {
       ref.read(emojiServiceProvider).shareEmoji(emoji);
 
   Future<dynamic> showDetailView(BuildContext context, Emoji emoji) {
-    return showCommonModalBottomSheet(
-        context: context, builder: (context) => EmojiDetailView(emoji.id));
+    if (useBottomSheetStyle) {
+      return showCommonModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: EmojiDetailView(emoji.id),
+        ),
+      );
+    } else {
+      return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(content: EmojiDetailView(emoji.id)),
+      );
+    }
   }
 }
