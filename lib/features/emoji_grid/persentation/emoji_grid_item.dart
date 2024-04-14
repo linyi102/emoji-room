@@ -1,6 +1,5 @@
 import 'package:emoji_room/constants/app_theme.dart';
 import 'package:emoji_room/features/emoji_detail/views/emoji_detail.dart';
-import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class EmojiGridItem extends ConsumerWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(AppTheme.emojiRadius),
       onTap: () => showDetailView(context, emoji),
-      onLongPress: () => shareEmoji(ref, emoji, context),
       child: Container(
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
@@ -30,9 +28,6 @@ class EmojiGridItem extends ConsumerWidget {
       ),
     );
   }
-
-  Future<void> shareEmoji(WidgetRef ref, Emoji emoji, BuildContext context) =>
-      ref.read(emojiServiceProvider).shareEmoji(emoji);
 
   Future<dynamic> showDetailView(BuildContext context, Emoji emoji) {
     if (useBottomSheetStyle) {
