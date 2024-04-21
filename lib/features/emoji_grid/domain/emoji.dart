@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:emoji_room/features/emoji_grid/domain/file.dart';
 import 'package:emoji_room/utils/string.dart';
 import 'package:path/path.dart' as p;
 
-class Emoji {
+class Emoji extends FileInode {
   final String id;
 
   final File file;
@@ -32,6 +33,7 @@ class Emoji {
     required this.ignore,
     required this.cTime,
     required this.mTime,
+    super.name = '',
   }) {
     tags = StringUtil.splitKeywords(title);
   }
