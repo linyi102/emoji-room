@@ -11,20 +11,35 @@ class EmojiGridView extends ConsumerWidget {
     final emojis = ref.watch(emojiListProvider);
 
     return emojis.when(
-      data: (emojis) => RefreshIndicator(
-        onRefresh: () => ref.read(emojiListProvider.notifier).refresh(),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 100),
-          itemCount: emojis.length,
-          itemBuilder: (context, index) {
-            final emoji = emojis[index];
-            return EmojiGridItem(emoji);
-          },
-        ),
+      data: (emojis) => SliverGrid.builder(
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 100),
+        itemCount: emojis.length,
+        itemBuilder: (context, index) {
+          final emoji = emojis[index];
+          return EmojiGridItem(emoji);
+        },
       ),
-      error: (error, stackTrace) => Center(child: Text(error.toString())),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stackTrace) => _buildError(error),
+      loading: () => _buildLoading(),
+    );
+  }
+
+  SliverToBoxAdapter _buildLoading() {
+    return const SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
+
+  SliverToBoxAdapter _buildError(Object error) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(child: Text(error.toString())),
+      ),
     );
   }
 }

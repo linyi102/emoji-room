@@ -3,7 +3,7 @@ import 'package:emoji_room/features/emoji_dir/views/emoji_dir_tile.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/persentation/emoji_grid_view.dart';
 import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
-import 'package:emoji_room/features/emoji_search/views/emoji_search_appbar.dart';
+import 'package:emoji_room/features/emoji_search/views/emoji_search_bar.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tags_grid_view.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tags_wrap_view.dart';
@@ -13,11 +13,24 @@ import 'package:emoji_room/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  final scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final emojiDirPath = ref.watch(emojiDirPathProvider);
     final emojiTotal = ref.watch(emojiTotalProvider);
 
@@ -25,34 +38,50 @@ class HomePage extends ConsumerWidget {
 
     return WillPopScope(
       onWillPop: () async => clearInputFocusAndSearchKeyword(ref, context),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('表情包 ${emojiTotal == 0 ? '' : emojiTotal}'),
-          actions: [
-            IconButton(
-                onPressed: () => _showAllTagView(context, ref),
-                icon: const Icon(Icons.tag)),
-            IconButton(
-                onPressed: () {
-                  showCommonModalBottomSheet(
-                    context: context,
-                    builder: (context) => const SettingView(),
-                  );
-                },
-                icon: const Icon(Icons.settings)),
+      child: RefreshIndicator(
+        onRefresh: () => ref.read(emojiListProvider.notifier).refresh(),
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            SliverAppBar.large(
+              snap: false,
+              title: Text('表情包 ${emojiTotal == 0 ? '' : emojiTotal}'),
+              actions: _buildActions(context),
+            ),
+            if (!hasSelectMainDir)
+              const SliverToBoxAdapter(child: EmojiDirTile())
+            else ...[
+              const SliverToBoxAdapter(child: EmojiSearchBar()),
+              SliverToBoxAdapter(
+                  child: EmojiTagsWrapView(selectedEmojiTagListProvider)),
+              const EmojiGridView(),
+            ]
           ],
         ),
-        body: !hasSelectMainDir
-            ? const EmojiDirTile()
-            : Column(
-                children: [
-                  const EmojiSearchAppBar(),
-                  EmojiTagsWrapView(selectedEmojiTagListProvider),
-                  const Expanded(child: EmojiGridView()),
-                ],
-              ),
       ),
     );
+  }
+
+  List<Widget> _buildActions(BuildContext context) {
+    return [
+      IconButton(onPressed: _focusSearchField, icon: const Icon(Icons.search)),
+      IconButton(
+          onPressed: () => _showAllTagView(context, ref),
+          icon: const Icon(Icons.tag)),
+      IconButton(
+          onPressed: () {
+            showCommonModalBottomSheet(
+              context: context,
+              builder: (context) => const SettingView(),
+            );
+          },
+          icon: const Icon(Icons.settings)),
+    ];
+  }
+
+  void _focusSearchField() {
+    scrollController.jumpTo(0);
+    ref.read(emojiSearchControllerProvider).focusNode.requestFocus();
   }
 
   bool clearInputFocusAndSearchKeyword(WidgetRef ref, BuildContext context) {

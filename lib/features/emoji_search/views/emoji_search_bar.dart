@@ -3,8 +3,8 @@ import 'package:emoji_room/utils/keyboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EmojiSearchAppBar extends ConsumerWidget {
-  const EmojiSearchAppBar({super.key});
+class EmojiSearchBar extends ConsumerWidget {
+  const EmojiSearchBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
