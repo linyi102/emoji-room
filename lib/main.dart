@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:bot_toast/bot_toast.dart';
+import 'package:emoji_room/constants/strings.dart';
 import 'package:emoji_room/features/home/views/home.dart';
 import 'package:emoji_room/providers/config.dart';
 import 'package:emoji_room/providers/theme.dart';
@@ -8,15 +11,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await prepareWindow();
+
   Hive.init((await getApplicationDocumentsDirectory()).path);
   final config = await loadConfig();
 
   runApp(ProviderScope(overrides: [
     configProvider.overrideWithValue(config),
   ], child: const MyApp()));
+}
+
+Future<void> prepareWindow() async {
+  if (!Platform.isWindows) return;
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(800, 600),
+    center: true,
+    title: kAppName,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 }
 
 Future<Config> loadConfig() async {
@@ -34,7 +55,7 @@ class MyApp extends ConsumerWidget {
     final brightness = ref.watch(themeBrightnessProvider);
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: kAppName,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.lightBlueAccent,
