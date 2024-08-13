@@ -86,9 +86,10 @@ class EmojiDetailView extends ConsumerWidget {
               shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100),
               )),
-              backgroundColor:
-                  MaterialStatePropertyAll(Theme.of(context).primaryColor),
-              foregroundColor: const MaterialStatePropertyAll(Colors.white),
+              backgroundColor: MaterialStatePropertyAll(
+                  Theme.of(context).colorScheme.primary),
+              foregroundColor: MaterialStatePropertyAll(
+                  Theme.of(context).colorScheme.onPrimary),
             ),
             onPressed: () {
               ref.read(emojiServiceProvider).shareEmoji(emoji);

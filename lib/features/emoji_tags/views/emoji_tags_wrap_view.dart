@@ -5,6 +5,7 @@ import 'package:emoji_room/features/emoji_tags/views/emoji_tag_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// TODO 标签很多时，首次加载卡顿
 class EmojiTagsWrapView extends ConsumerWidget {
   const EmojiTagsWrapView(this.providerListenable, {super.key});
   final ProviderListenable<List<EmojiTag>> providerListenable;

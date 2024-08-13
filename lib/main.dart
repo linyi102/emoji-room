@@ -62,6 +62,7 @@ class MyApp extends ConsumerWidget {
           brightness: brightness,
         ),
         useMaterial3: true,
+        fontFamily: Platform.isWindows ? 'Microsoft YaHei' : null,
       ),
       builder: (context, child) {
         child = botToastBuilder(context, child);

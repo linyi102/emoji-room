@@ -5,7 +5,7 @@ import 'package:emoji_room/features/emoji_grid/persentation/emoji_grid_view.dart
 import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
 import 'package:emoji_room/features/emoji_search/views/emoji_search_appbar.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
-import 'package:emoji_room/features/emoji_tags/views/emoji_tags_list_view.dart';
+import 'package:emoji_room/features/emoji_tags/views/emoji_tags_grid_view.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tags_wrap_view.dart';
 import 'package:emoji_room/features/settings/views/setting_view.dart';
 import 'package:emoji_room/utils/keyboard.dart';
@@ -80,11 +80,19 @@ class HomePage extends ConsumerWidget {
     return showCommonModalBottomSheet(
       context: context,
       builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: Text('标签 ${ref.read(emojiTagListProvider).length}'),
-          automaticallyImplyLeading: false,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              child: Text(
+                '标签 ${ref.read(emojiTagListProvider).length}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            Expanded(child: EmojiTagsGridView(emojiTagListProvider)),
+          ],
         ),
-        body: EmojiTagsListView(emojiTagListProvider),
       ),
     );
   }
