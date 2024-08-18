@@ -1,5 +1,6 @@
 import 'package:emoji_room/extensions/list_extension.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
+import 'package:emoji_room/providers/config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 typedef EmojiSortFn = List<Emoji> Function(List<Emoji> emojis, bool isReverse);
@@ -61,15 +62,23 @@ class EmojiSortOption {
 class EmojiSortOptionNotifier extends Notifier<EmojiSortOption> {
   @override
   EmojiSortOption build() {
-    return EmojiSortOption(mode: EmojiSortMode.created, isReverse: true);
+    final config = ref.watch(configProvider);
+    return EmojiSortOption(
+      mode: EmojiSortMode.values[config.getEmojiSortModeIndex()],
+      isReverse: config.getEmojiSortReverse(),
+    );
   }
 
   void changeSortMode(EmojiSortMode mode) {
     state = state.copyWith(mode: mode);
+    ref
+        .read(configProvider)
+        .setEmojiSortModeIndex(EmojiSortMode.values.indexOf(mode));
   }
 
   void changeSortDirection(bool isReverse) {
     state = state.copyWith(isReverse: isReverse);
+    ref.read(configProvider).setEmojiSortReverse(isReverse);
   }
 }
 

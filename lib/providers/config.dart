@@ -21,6 +21,16 @@ class Config {
   static const scanQQKey = 'scanQQ';
   bool getScanQQ() => box.get(scanQQKey, defaultValue: false);
   Future<void> setScanQQ(bool scan) => box.put(scanQQKey, scan);
+
+  static const emojiSortModeKey = 'emojiSortMode';
+  int getEmojiSortModeIndex() => box.get(emojiSortModeKey, defaultValue: 0);
+  Future<void> setEmojiSortModeIndex(int index) =>
+      box.put(emojiSortModeKey, index);
+
+  static const emojiSortReverse = 'emojiSortReverse';
+  bool getEmojiSortReverse() => box.get(emojiSortReverse, defaultValue: true);
+  Future<void> setEmojiSortReverse(bool isReverse) =>
+      box.put(emojiSortReverse, isReverse);
 }
 
 @Riverpod(keepAlive: true)
