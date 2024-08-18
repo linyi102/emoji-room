@@ -83,7 +83,11 @@ class EmojiService {
       ToastUtil.showText('已复制到剪切板');
     }
 
-    final newEmoji = emoji.copyWith(usageCount: emoji.usageCount + 1);
+    final newEmoji =
+        emoji.copyWith(usageCount: emoji.usageCount + 1, shareRecords: [
+      ...emoji.shareRecords,
+      DateTime.now(),
+    ]);
     ref.read(emojiListProvider.notifier).updateItem(newEmoji);
   }
 }
@@ -118,14 +122,14 @@ class EmojiList extends _$EmojiList {
     return res;
   }
 
-  updateItem(Emoji newEmoji) {
+  void updateItem(Emoji newEmoji) {
     ref.read(emojiRepositoryProvider).saveEmoji(newEmoji);
 
     final emojis = state.value ?? [];
     state = AsyncData([
       for (final emoji in emojis)
         if (emoji.id == newEmoji.id)
-          newEmoji.copyWith(mTime: DateTime.now())
+          newEmoji
         else
           emoji
     ]);

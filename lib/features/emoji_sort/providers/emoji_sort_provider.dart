@@ -6,6 +6,7 @@ typedef EmojiSortFn = List<Emoji> Function(List<Emoji> emojis, bool isReverse);
 
 enum EmojiSortMode {
   created('创建时间', _sortByCreated),
+  recentShared('最近分享', _sortByRecentShared),
   mostShared('最多分享', _sortByMostShared);
 
   final String label;
@@ -13,8 +14,22 @@ enum EmojiSortMode {
   const EmojiSortMode(this.label, this.sortFn);
 }
 
+int _defaultSort(Emoji a, Emoji b) => a.fcTime.compareTo(b.fcTime);
+
 List<Emoji> _sortByCreated(List<Emoji> emojis, bool isReverse) {
   final sorted = emojis.sorted((a, b) => a.fcTime.compareTo(b.fcTime));
+  return isReverse ? sorted.reversed.toList() : sorted;
+}
+
+List<Emoji> _sortByRecentShared(List<Emoji> emojis, bool isReverse) {
+  final sorted = emojis.sorted((a, b) {
+    final aTime = a.shareRecords.lastOrNull;
+    final bTime = b.shareRecords.lastOrNull;
+    if (aTime != null && bTime != null) return aTime.compareTo(bTime);
+    if (aTime != null) return 1;
+    if (bTime != null) return -1;
+    return _defaultSort(a, b);
+  });
   return isReverse ? sorted.reversed.toList() : sorted;
 }
 

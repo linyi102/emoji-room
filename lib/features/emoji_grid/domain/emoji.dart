@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:emoji_room/utils/string.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
+import 'package:emoji_room/utils/string.dart';
 
 class Emoji {
   final String id;
@@ -18,6 +19,7 @@ class Emoji {
   final bool ignore;
   final DateTime cTime;
   final DateTime mTime;
+  final List<DateTime> shareRecords;
   late final List<String> tags;
 
   Emoji({
@@ -32,6 +34,7 @@ class Emoji {
     required this.ignore,
     required this.cTime,
     required this.mTime,
+    required this.shareRecords,
   }) {
     tags = StringUtil.splitKeywords(title);
   }
@@ -52,6 +55,7 @@ class Emoji {
       ignore: false,
       cTime: now,
       mTime: now,
+      shareRecords: [],
     );
   }
 
@@ -71,6 +75,7 @@ class Emoji {
       ignore: false,
       cTime: DateTime(0),
       mTime: DateTime(0),
+      shareRecords: [],
     );
   }
 
@@ -86,6 +91,7 @@ class Emoji {
     bool? ignore,
     DateTime? cTime,
     DateTime? mTime,
+    List<DateTime>? shareRecords,
   }) {
     return Emoji(
       id: id ?? this.id,
@@ -99,12 +105,14 @@ class Emoji {
       ignore: ignore ?? this.ignore,
       cTime: cTime ?? this.cTime,
       mTime: mTime ?? this.mTime,
+      shareRecords: shareRecords ?? this.shareRecords,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'file': '',
       'fileName': fileName,
       'fcTime': fcTime.millisecondsSinceEpoch,
       'fmTime': fmTime.millisecondsSinceEpoch,
@@ -114,6 +122,8 @@ class Emoji {
       'ignore': ignore,
       'cTime': cTime.millisecondsSinceEpoch,
       'mTime': mTime.millisecondsSinceEpoch,
+      'shareRecords':
+          shareRecords.map((x) => x.millisecondsSinceEpoch).toList(),
     };
   }
 
@@ -130,6 +140,13 @@ class Emoji {
       ignore: map['ignore'] as bool? ?? false,
       cTime: DateTime.fromMillisecondsSinceEpoch(map['cTime'] as int? ?? 0),
       mTime: DateTime.fromMillisecondsSinceEpoch(map['mTime'] as int? ?? 0),
+      shareRecords: map['shareRecords'] == null
+          ? []
+          : List<DateTime>.from(
+              (map['shareRecords'] as List<int>).map<DateTime>(
+                (x) => DateTime.fromMillisecondsSinceEpoch(x),
+              ),
+            ),
     );
   }
 
@@ -140,14 +157,15 @@ class Emoji {
 
   @override
   String toString() {
-    return 'Emoji(file: $file, fileName: $fileName, fcTime: $fcTime, fmTime: $fmTime size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime)';
+    return 'Emoji(id: $id, file: $file, fileName: $fileName, fcTime: $fcTime, fmTime: $fmTime, size: $size, title: $title, usageCount: $usageCount, ignore: $ignore, cTime: $cTime, mTime: $mTime, shareRecords: $shareRecords, tags: $tags)';
   }
 
   @override
   bool operator ==(covariant Emoji other) {
     if (identical(this, other)) return true;
 
-    return other.file == file &&
+    return other.id == id &&
+        other.file == file &&
         other.fileName == fileName &&
         other.fcTime == fcTime &&
         other.fmTime == fmTime &&
@@ -156,12 +174,15 @@ class Emoji {
         other.usageCount == usageCount &&
         other.ignore == ignore &&
         other.cTime == cTime &&
-        other.mTime == mTime;
+        other.mTime == mTime &&
+        listEquals(other.shareRecords, shareRecords) &&
+        other.tags == tags;
   }
 
   @override
   int get hashCode {
-    return file.hashCode ^
+    return id.hashCode ^
+        file.hashCode ^
         fileName.hashCode ^
         fcTime.hashCode ^
         fmTime.hashCode ^
@@ -170,6 +191,8 @@ class Emoji {
         usageCount.hashCode ^
         ignore.hashCode ^
         cTime.hashCode ^
-        mTime.hashCode;
+        mTime.hashCode ^
+        shareRecords.hashCode ^
+        tags.hashCode;
   }
 }
