@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:emoji_room/features/emoji_dir/views/emoji_dir_tile.dart';
 import 'package:emoji_room/features/emoji_dir/views/scan_qq_tile.dart';
 import 'package:emoji_room/features/settings/views/brightness_switch_tile.dart';
@@ -14,12 +16,12 @@ class SettingView extends ConsumerWidget {
         title: const Text('设置'),
         automaticallyImplyLeading: false,
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            EmojiDirTile(),
-            BrightnessSwitchTile(),
-            ScanQQTile(),
+            const EmojiDirTile(),
+            const BrightnessSwitchTile(),
+            if (Platform.isAndroid) const ScanQQTile(),
           ],
         ),
       ),
