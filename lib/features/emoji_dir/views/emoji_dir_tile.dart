@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:emoji_room/features/emoji_dir/providers/emoji_dir.dart';
 import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
+import 'package:emoji_room/utils/windows.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +17,12 @@ class EmojiDirTile extends ConsumerWidget {
       title: const Text('选择主目录'),
       subtitle: Text(dirPath ?? '未选择'),
       onTap: ref.read(emojiServiceProvider).pickEmojiDir,
+      trailing: dirPath == null && !Platform.isWindows
+          ? null
+          : IconButton(
+              onPressed: () => WindowsUtil.openFileExplorer(dirPath),
+              icon: const Icon(Icons.folder_open, size: 20),
+            ),
     );
   }
 }
