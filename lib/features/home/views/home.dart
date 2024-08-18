@@ -4,6 +4,7 @@ import 'package:emoji_room/features/emoji_grid/application/emoji_service.dart';
 import 'package:emoji_room/features/emoji_grid/persentation/emoji_grid_view.dart';
 import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
 import 'package:emoji_room/features/emoji_search/views/emoji_search_bar.dart';
+import 'package:emoji_room/features/emoji_sort/views/emoji_sort_setting_view.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tags_grid_view.dart';
 import 'package:emoji_room/features/emoji_tags/views/emoji_tags_wrap_view.dart';
@@ -66,6 +67,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     return [
       IconButton(onPressed: _focusSearchField, icon: const Icon(Icons.search)),
       IconButton(
+          onPressed: () => _showSortOptionView(context, ref),
+          icon: const Icon(Icons.filter_list_rounded)),
+      IconButton(
           onPressed: () => _showAllTagView(context, ref),
           icon: const Icon(Icons.tag)),
       IconButton(
@@ -103,6 +107,13 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
 
     return back;
+  }
+
+  Future<dynamic> _showSortOptionView(BuildContext context, WidgetRef ref) {
+    return showCommonModalBottomSheet(
+      context: context,
+      builder: (context) => const EmojiSortSettingView(),
+    );
   }
 
   Future<dynamic> _showAllTagView(BuildContext context, WidgetRef ref) {

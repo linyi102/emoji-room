@@ -49,7 +49,7 @@ final emojiTotalProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef EmojiTotalRef = AutoDisposeProviderRef<int>;
-String _$emojiListHash() => r'ce3c58d59b6ce1d7521f332b435da6b400a42bfa';
+String _$emojiListHash() => r'6c72e6127cd302b7a7b0d26ee924e8525d349f57';
 
 /// See also [EmojiList].
 @ProviderFor(EmojiList)

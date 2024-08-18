@@ -5,6 +5,7 @@ import 'package:emoji_room/features/emoji_dir/providers/scan_qq.provider.dart';
 import 'package:emoji_room/features/emoji_grid/data/emoji_repository.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
 import 'package:emoji_room/features/emoji_search/providers/emoji_search.provider.dart';
+import 'package:emoji_room/features/emoji_sort/providers/emoji_sort_provider.dart';
 import 'package:emoji_room/features/emoji_tags/providers/emoji_tag_list.provider.dart';
 import 'package:emoji_room/utils/permission.dart';
 import 'package:emoji_room/utils/string.dart';
@@ -97,16 +98,18 @@ class EmojiList extends _$EmojiList {
   bool cache = false;
 
   @override
-  Future<List<Emoji>> build() {
+  Future<List<Emoji>> build() async {
     final service = ref.watch(emojiServiceProvider);
     final keywords = ref.watch(searchKeywordsProvider);
-    final emojis = service.fetchEmojis(
+    final emojis = await service.fetchEmojis(
       keywords: keywords,
       cache: cache,
     );
+    final sortOption = ref.watch(emojiSortOptionProvider);
+    final sortedEmojis = sortOption.mode.sortFn(emojis, sortOption.isReverse);
 
     cache = true;
-    return emojis;
+    return Future.value(sortedEmojis);
   }
 
   Future<List<Emoji>> refresh() {
