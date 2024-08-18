@@ -143,7 +143,7 @@ class Emoji {
       shareRecords: map['shareRecords'] == null
           ? []
           : List<DateTime>.from(
-              (map['shareRecords'] as List<int>).map<DateTime>(
+              map['shareRecords'].map<DateTime>(
                 (x) => DateTime.fromMillisecondsSinceEpoch(x),
               ),
             ),
