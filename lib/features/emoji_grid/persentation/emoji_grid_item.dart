@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:emoji_room/constants/app_theme.dart';
 import 'package:emoji_room/features/emoji_detail/views/emoji_detail.dart';
 import 'package:emoji_room/features/emoji_grid/domain/emoji.dart';
+import 'package:emoji_room/utils/keyboard.dart';
 import 'package:emoji_room/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +32,7 @@ class EmojiGridItem extends ConsumerWidget {
   }
 
   Future<dynamic> showDetailView(BuildContext context, Emoji emoji) {
+    KeyBoardControl.cancelKeyBoard(context);
     if (useBottomSheetStyle) {
       return showCommonModalBottomSheet(
         context: context,
