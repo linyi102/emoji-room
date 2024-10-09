@@ -58,6 +58,7 @@ dev_dependencies:
   riverpod_generator: ^2.3.11
   build_runner: ^2.4.9
   custom_lint: ^0.6.4
+  package_rename: ^1.7.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -112,3 +113,15 @@ icons_launcher:
 
 flutter_gen:
   output: lib/constants
+
+package_rename_config:
+  android:
+    app_name: EmojiRoom
+    package_name: com.linyi.emoji_room
+    override_old_package: com.example.emoji_room
+
+  windows:
+    app_name: EmojiRoom
+    organization: Linyi
+    copyright_notice: Copyright ©️ 2024 Linyi. All rights reserved.
+    exe_name: EmojiRoom

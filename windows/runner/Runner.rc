@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "emoji_room" "\0"
+            VALUE "CompanyName", "Linyi" "\0"
+            VALUE "FileDescription", "EmojiRoom" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "emoji_room" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
+            VALUE "InternalName", "EmojiRoom" "\0"
+            VALUE "LegalCopyright", "Copyright ©️ 2024 Linyi. All rights reserved." "\0"
             VALUE "OriginalFilename", "EmojiRoom.exe" "\0"
-            VALUE "ProductName", "emoji_room" "\0"
+            VALUE "ProductName", "EmojiRoom" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
