@@ -20,7 +20,7 @@ void main() async {
   await prepareWindow();
   if (Platform.isWindows) await hotKeyManager.unregisterAll();
 
-  Hive.init((await getApplicationDocumentsDirectory()).path);
+  Hive.init((await getApplicationSupportDirectory()).path);
   final config = await loadConfig();
 
   runApp(ProviderScope(overrides: [
