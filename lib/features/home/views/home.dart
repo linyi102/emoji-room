@@ -104,7 +104,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           icon: const Icon(Icons.filter_list_rounded)),
       IconButton(
           onPressed: () => _showAllTagView(context, ref),
-          icon: const Icon(Icons.tag)),
+          icon: const Icon(Icons.label_outline_sharp)),
       IconButton(
           onPressed: () {
             showCommonModalBottomSheet(
