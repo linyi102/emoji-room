@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:emoji_room/constants/assets.gen.dart';
 import 'package:emoji_room/constants/strings.dart';
 import 'package:emoji_room/features/home/views/home.dart';
 import 'package:emoji_room/providers/config.dart';
@@ -27,17 +28,20 @@ void main() async {
 
 Future<void> prepareWindow() async {
   if (!Platform.isWindows) return;
-  await windowManager.ensureInitialized();
 
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(800, 600),
-    center: true,
-    title: kAppName,
+  await windowManager.ensureInitialized();
+  windowManager.waitUntilReadyToShow(
+    const WindowOptions(
+      size: Size(1080, 720),
+      minimumSize: Size(300, 600),
+      center: true,
+      titleBarStyle: TitleBarStyle.hidden,
+    ),
+    () async {
+      await windowManager.show();
+      await windowManager.focus();
+    },
   );
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
 }
 
 Future<Config> loadConfig() async {
@@ -62,26 +66,63 @@ class MyApp extends ConsumerWidget {
           brightness: brightness,
         ),
         useMaterial3: true,
-        fontFamily: Platform.isWindows ? 'Microsoft YaHei' : null,
+        fontFamilyFallback: const ['HarmonyOS Sans SC', 'Microsoft YaHei'],
+        appBarTheme: Platform.isWindows
+            ? const AppBarTheme(scrolledUnderElevation: 0)
+            : null,
       ),
+      debugShowCheckedModeBanner: false,
       builder: (context, child) {
         child = botToastBuilder(context, child);
-        child = MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: Scaffold(
-            // 顶层的resizeToAvoidBottomInset也要置为false
-            resizeToAvoidBottomInset: false,
-            body: GestureDetector(
-              onTap: () => KeyBoardControl.cancelKeyBoard(context),
-              child: child,
-            ),
+        child = Scaffold(
+          // 顶层的resizeToAvoidBottomInset也要置为false
+          resizeToAvoidBottomInset: false,
+          body: GestureDetector(
+            onTap: () => KeyBoardControl.cancelKeyBoard(context),
+            child: child,
           ),
         );
         return child;
       },
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: const HomePage(),
+      home: Column(
+        children: [
+          if (Platform.isWindows) _buildWindowCaption(),
+          const Expanded(child: HomePage())
+        ],
+      ),
       scrollBehavior: MyCustomScrollBehavior(),
+    );
+  }
+
+  SizedBox _buildWindowCaption() {
+    return SizedBox(
+      height: 40,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Assets.logo.image(height: 24, width: 24),
+                ),
+                const Text(kAppName),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: StatefulBuilder(
+              builder: (context, setState) => WindowCaption(
+                brightness: Theme.of(context).brightness,
+                backgroundColor: Colors.transparent,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
