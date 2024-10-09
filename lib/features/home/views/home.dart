@@ -29,14 +29,25 @@ class _HomePageState extends ConsumerState<HomePage> {
     modifiers: [KeyModifier.control],
     scope: HotKeyScope.inapp,
   );
+  bool showSearchAction = false;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(() {
+      _setShowSearchAction(_scrollController.position.pixels > 0);
+    });
     hotKeyManager.register(
       _searchHotKey,
       keyDownHandler: (hotKey) => _focusSearchField(),
     );
+  }
+
+  void _setShowSearchAction(bool visible) {
+    if (visible == showSearchAction) return;
+    setState(() {
+      showSearchAction = visible;
+    });
   }
 
   @override
@@ -81,7 +92,13 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   List<Widget> _buildActions(BuildContext context) {
     return [
-      IconButton(onPressed: _focusSearchField, icon: const Icon(Icons.search)),
+      AnimatedScale(
+        scale: showSearchAction ? 1 : 0,
+        duration: kThemeAnimationDuration,
+        curve: Curves.easeInCubic,
+        child: IconButton(
+            onPressed: _focusSearchField, icon: const Icon(Icons.search)),
+      ),
       IconButton(
           onPressed: () => _showSortOptionView(context, ref),
           icon: const Icon(Icons.filter_list_rounded)),
