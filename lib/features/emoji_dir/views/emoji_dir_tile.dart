@@ -12,12 +12,14 @@ class EmojiDirTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dirPath = ref.watch(emojiDirPathProvider);
+    final hasConfigDirPath = dirPath?.trim().isNotEmpty == true;
+
     return ListTile(
       leading: const Icon(Icons.folder),
       title: const Text('选择主目录'),
-      subtitle: Text(dirPath ?? '未选择'),
+      subtitle: hasConfigDirPath ? Text(dirPath ?? '') : null,
       onTap: ref.read(emojiServiceProvider).pickEmojiDir,
-      trailing: dirPath == null && !Platform.isWindows
+      trailing: !hasConfigDirPath || !Platform.isWindows
           ? null
           : IconButton(
               onPressed: () => WindowsUtil.openFileExplorer(dirPath),
