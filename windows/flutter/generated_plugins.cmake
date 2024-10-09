@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  hotkey_manager
   pasteboard
   permission_handler_windows
   screen_retriever

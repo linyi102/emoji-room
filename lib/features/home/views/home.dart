@@ -13,6 +13,7 @@ import 'package:emoji_room/utils/keyboard.dart';
 import 'package:emoji_room/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -22,12 +23,27 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  final scrollController = ScrollController();
+  final _scrollController = ScrollController();
+  final HotKey _searchHotKey = HotKey(
+    KeyCode.keyF,
+    modifiers: [KeyModifier.control],
+    scope: HotKeyScope.inapp,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    hotKeyManager.register(
+      _searchHotKey,
+      keyDownHandler: (hotKey) => _focusSearchField(),
+    );
+  }
 
   @override
   void dispose() {
     super.dispose();
-    scrollController.dispose();
+    _scrollController.dispose();
+    hotKeyManager.unregister(_searchHotKey);
   }
 
   @override
@@ -42,7 +58,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: RefreshIndicator(
         onRefresh: () => ref.read(emojiListProvider.notifier).refresh(),
         child: CustomScrollView(
-          controller: scrollController,
+          controller: _scrollController,
           slivers: [
             SliverAppBar.large(
               snap: false,
@@ -79,13 +95,18 @@ class _HomePageState extends ConsumerState<HomePage> {
               builder: (context) => const SettingView(),
             );
           },
-          icon: const Icon(Icons.settings)),
+          icon: const Icon(Icons.settings_outlined)),
     ];
   }
 
   void _focusSearchField() {
-    scrollController.jumpTo(0);
-    ref.read(emojiSearchControllerProvider).focusNode.requestFocus();
+    _scrollController.jumpTo(0);
+    final provider = ref.read(emojiSearchControllerProvider);
+    provider.focusNode.requestFocus();
+    provider.keywordTec.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: provider.keywordTec.text.length,
+    );
   }
 
   bool clearInputFocusAndSearchKeyword(WidgetRef ref, BuildContext context) {
